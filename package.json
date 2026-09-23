@@ -1,18 +1,18 @@
 {
-  "name": "browser-jev",
-  "version": "0.1.0",
+  "name": "browser-verify",
+  "version": "0.2.0",
   "private": true,
-  "description": "Adversarial browser exploration with Jev as the oracle and navigator",
+  "description": "Evidence-first browser verification for coding agents. Verify local workflows and persisted state through MCP or CLI.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DowLucas/browser-jev.git"
+    "url": "git+https://github.com/hamza-paracha/browser-verify.git"
   },
-  "homepage": "https://github.com/DowLucas/browser-jev#readme",
-  "bugs": "https://github.com/DowLucas/browser-jev/issues",
+  "homepage": "https://github.com/hamza-paracha/browser-verify#readme",
+  "bugs": "https://github.com/hamza-paracha/browser-verify/issues",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "explore": "tsx --env-file-if-exists=.env src/cli.ts",
@@ -22,15 +22,50 @@
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test test/*.test.ts",
     "runner": "tsx src/runner/server.ts",
-    "bench": "tsx --env-file-if-exists=.env scripts/recall-bench.ts"
+    "bench": "tsx --env-file-if-exists=.env scripts/recall-bench.ts",
+    "verify": "node bin/browser-verify.mjs",
+    "verify:mcp": "node bin/browser-verify.mjs --stdio",
+    "verify:demo": "tsx scripts/verify-demo.ts",
+    "plugin:build": "node scripts/build-plugin.mjs",
+    "verify:live": "tsx --env-file-if-exists=.env scripts/verify-live.ts",
+    "verify:install": "tsx scripts/verify-install.ts",
+    "verify:example": "tsx scripts/verify-example.ts"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "@typesafe-ai/sdk": "^0.6.0",
     "playwright": "^1.63.0",
-    "tsx": "^4.23.13"
+    "tsx": "^4.23.13",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/node": "^26.6.1",
     "typescript": "^7.0.2"
-  }
+  },
+  "bin": {
+    "browser-verify": "bin/browser-verify.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "docs/",
+    "demo/",
+    "scripts/verify-demo.ts",
+    "scripts/verify-live.ts",
+    "test/helpers/verification-fixture.ts",
+    "LICENSE",
+    "README.md",
+    "examples/profile-app/",
+    "scripts/verify-example.ts",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "browser-testing",
+    "mcp",
+    "playwright",
+    "coding-agents",
+    "verification",
+    "codex",
+    "claude-code"
+  ]
 }

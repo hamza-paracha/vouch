@@ -1,25 +1,15 @@
 # Security policy
 
-## Reporting a vulnerability
+## Report a vulnerability
 
-Please report security issues privately, not in a public issue: use **Report a vulnerability** under
-this repository's **Security** tab (GitHub private vulnerability reporting). Include what an attacker
-can do, and the steps to reproduce it.
+Use [GitHub private vulnerability reporting](https://github.com/hamza-paracha/browser-verify/security/advisories/new). Include the affected commit, a minimal reproduction using synthetic data, and the impact. Please keep credentials and real application data out of reports.
 
-You can expect a first reply within a week. Fixes land on `main`, and the runner image is rebuilt from it.
+This project is maintained on a best-effort basis; it does not provide a response-time or security-support SLA. Fixes target the latest `main` and alpha release.
 
-## What counts
+## Scope
 
-Especially interesting, because the tool acts on live sites and holds login sessions:
+Relevant issues include bypassing origin or write-path restrictions; reading local files, environment values or credentials through the tool; escaping configured model budgets; and causing failures or incomplete runs to be reported as passes. Issues in the inherited explorer/runner, including authentication or saved-session exposure, are also in scope.
 
-- a way past the network fence, the write fence of a mode, the forbidden-controls list or the
-  production-hostname check
-- a way for a runner API client or a target page to read saved login sessions, or files on the runner
-- a way to point the runner at private or internal addresses it should refuse
-- authentication bypass on the runner's API or UI
+Browser Verify is intended for controlled disposable local HTTP apps. Its browser proxy is not an operating-system sandbox for hostile sites. Evidence is stored locally and may contain application data. See [documented boundaries](docs/verification.md#bounds-and-current-limits).
 
-Findings browser-jev reports *about the site under test* are not vulnerabilities in browser-jev.
-
-## Supported versions
-
-Only the latest `main` (and the `latest` runner image) is supported.
+A bug that Browser Verify finds in a target application is not itself a vulnerability in Browser Verify.

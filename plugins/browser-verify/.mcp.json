@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "browser-verify": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/bin/browser-verify.mjs", "--stdio"]
+    }
+  }
+}

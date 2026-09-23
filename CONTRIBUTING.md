@@ -1,43 +1,33 @@
-# Contributing
+# Contributing to Browser Verify
 
-Thanks for helping. Bug reports, false-positive reports and pull requests are all welcome.
+Reproducible bugs, clear documentation, and focused fixes are welcome. This is an alpha; help us make its supported local workflows dependable before widening its scope.
 
-## Setup
+## Setup and checks
 
-Node 20 or later.
+Use Node.js 22+ and npm:
 
 ```sh
-npm install
+npm ci
 npx playwright install chromium
 npm run typecheck
-npm test             # unit tests plus browser tests against the demo app; no API key needed
+npm test
+npm run verify:demo
+npm run verify:install
+npm run verify:example
 ```
 
-Most work needs no model key: `npm run explore -- --url http://127.0.0.1:4173/ --no-model` runs the free
-oracle and a random explorer against the demo app (`npm run demo:server`). Judgment and navigation by
-Jev need a `TYPESAFE_API_KEY` in `.env`; `npm run bench` measures recall on the demo app's planted bugs
-with one.
+On Linux, install Chromium with `--with-deps`. These commands need no provider credentials. Do not add live paid calls to the default test suite or CI.
 
-## Pull requests
+## Make a focused change
 
-- Keep a change to one thing, and say in the description what it fixes and how you checked it.
-- Add or update a test. Browser behaviour belongs in a test against `demo/server.mjs`; if you need a new
-  kind of bug to find, plant it there and tag it `PLANTED`.
-- `npm run typecheck` and `npm test` must pass; CI runs both on every pull request.
-- Match the surrounding code: comments explain *why*, not what.
+Explain the problem, the resulting behavior, and how you checked it. Add regression coverage for changes in behavior. Verifier code is in `src/verify/`; its tests are `test/verification*.test.ts`. The legacy explorer and runner remain in `src/` and have their own tests.
 
-## Safety rules the code keeps
+Changes to HTTP restrictions, write permissions, model routing, budgets, cancellation, or evidence handling need tests that exercise the relevant failure path. Keep models disabled by default; model output must never replace independent assertions or expand permissions. Never automatically refund uncertain paid requests or silently retry writes.
 
-The explorer clicks and submits things on real sites, so a few rules are load-bearing. A change that
-weakens one needs a strong reason in the pull request:
+Run typechecking and the full test suite before submitting. Run `verify:install` when changing packaging, dependencies, CLI, or MCP behavior. Keep docs and examples aligned with shipped behavior.
 
-- Observe mode is the default and lets no writes through.
-- The forbidden-controls list and the production-hostname check apply in every mode, including setup steps.
-- Requests to hosts outside the allowlist are blocked.
-- Saved logins never leave the runner: the API returns summaries, never cookie or storage values.
+## Reports that help
 
-## Reporting a false positive
+Include your commit/version, Node version, OS, a minimal disposable reproduction, expected outcome, and actual status/reason. Redact reports before sharing: accessibility observations can contain application data. Never upload `.env`, credentials, saved sessions, or a production data dump.
 
-A finding that is not a bug is worth an issue: include the report's finding (category, message,
-trigger) and, if you can, the trace from `out/run-*/traces/`. Remove anything private from the trace
-first: it holds screenshots and page contents.
+Report security vulnerabilities privately using [the security policy](SECURITY.md). Normal application failures found by the verifier belong in your application’s issue tracker.

@@ -1,5 +1,5 @@
 name: Feature request
-description: An idea for browser-jev
+description: An idea for Browser Verify
 labels: [enhancement]
 body:
   - type: textarea

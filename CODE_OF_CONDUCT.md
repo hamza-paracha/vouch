@@ -8,6 +8,6 @@ any other project space.
 
 ## Reporting
 
-Report unacceptable behaviour privately to the maintainer, [@DowLucas](https://github.com/DowLucas),
+Report unacceptable behaviour privately to the maintainer, [@hamza-paracha](https://github.com/hamza-paracha),
 through GitHub. Reports are handled confidentially. The maintainer may edit or remove comments, and
 block people who break these rules.

@@ -1,0 +1,89 @@
+{
+  "release": "0.2.0",
+  "recordedAt": "2026-09-23T01:09:43.699Z",
+  "liveSmoke": {
+    "timestamp": "2026-09-23T00:45:03.463Z",
+    "totalCalls": 3,
+    "totalInputTokens": 1314,
+    "estimatedTokenCostUsd": 0.000055188,
+    "providerReportedCostUsd": null,
+    "pricingSource": "https://docs.typesafe.ai/models",
+    "cases": [
+      {
+        "scenario": "exact-match",
+        "expected": "passed",
+        "actual": "passed",
+        "matched": true,
+        "calls": 0,
+        "inputTokens": 0,
+        "models": []
+      },
+      {
+        "scenario": "semantic-choice",
+        "expected": "passed",
+        "actual": "passed",
+        "matched": true,
+        "calls": 1,
+        "inputTokens": 438,
+        "models": [
+          "jev-1.13.0"
+        ]
+      },
+      {
+        "scenario": "false-success",
+        "expected": "failed",
+        "actual": "failed",
+        "matched": true,
+        "calls": 1,
+        "inputTokens": 438,
+        "models": [
+          "jev-1.13.0"
+        ]
+      },
+      {
+        "scenario": "unrelated-intent",
+        "expected": "abstained",
+        "actual": "abstained",
+        "matched": true,
+        "calls": 1,
+        "inputTokens": 438,
+        "models": [
+          "jev-1.13.0"
+        ]
+      }
+    ]
+  },
+  "sourceRepair": {
+    "before": {
+      "status": "failed",
+      "reason": "Persisted-state assertion failed at displayName: expected \"Ada Lovelace\", received \"Original\"",
+      "disk": {
+        "displayName": "Original"
+      },
+      "sourceHash": "a832fae929c337d86a96e5ed3a8f63e8c122ce80ae4c4b46478ba07cdd01c753"
+    },
+    "after": {
+      "status": "passed",
+      "reason": "All supplied assertions and deterministic browser checks passed",
+      "disk": {
+        "displayName": "Ada Lovelace"
+      },
+      "sourceHash": "92ada883b1be503a11f86025b5f126f1ecbbbc770f4adf56863990b65d7b8909"
+    },
+    "sameAssertions": true,
+    "freshDataPerRun": true,
+    "modelCalls": 0
+  },
+  "clientChecks": {
+    "codexPluginInstalled": true,
+    "claudePluginManifestValidated": true,
+    "claudeMcpConnected": true,
+    "freshNpmInstallAndMcpPassed": true
+  },
+  "limits": [
+    "Small development smoke; not calibrated or held-out evaluation.",
+    "OpenRouter exercised with simulated responses only.",
+    "Local HTTP controlled targets only.",
+    "No public package or marketplace publication."
+  ]
+}

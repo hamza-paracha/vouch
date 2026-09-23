@@ -3,3 +3,11 @@ out/
 .env
 auth/
 runner-data/
+
+# Local credentials, generated packages and handoff notes
+.env.*
+!.env.example
+!deploy/.env.example
+*.tgz
+.DS_Store
+HANDOFF.md

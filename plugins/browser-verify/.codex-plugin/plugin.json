@@ -1,0 +1,20 @@
+{
+  "name": "browser-verify",
+  "version": "0.2.0",
+  "license": "MIT",
+  "description": "Verify local browser workflows with reproducible evidence and bounded adaptive decisions.",
+  "author": {
+    "name": "Browser Verify contributors"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Browser Verify",
+    "shortDescription": "Check local app changes with browser evidence.",
+    "longDescription": "Inspect controls, execute scoped workflows, verify persisted state, and return evidence to the coding agent. Deterministic by default, with optional budgeted Jev routing.",
+    "developerName": "Browser Verify contributors",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Verify the local app changes and fix any reproduced failures."]
+  },
+  "mcpServers": "./.mcp.json"
+}
