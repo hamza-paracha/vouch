@@ -1,0 +1,101 @@
+{
+  "version": "0.4.0-candidate",
+  "recordedAt": "2026-09-23T03:37:29.857Z",
+  "automated": {
+    "tests": 140,
+    "passed": 140,
+    "typecheck": "passed",
+    "standaloneFreshInstall": "passed",
+    "fullPackageFreshInstall": "passed",
+    "claudePluginConnection": "passed",
+    "standaloneDependencies": [
+      "@modelcontextprotocol/sdk",
+      "@typesafe-ai/sdk",
+      "tsx",
+      "zod"
+    ]
+  },
+  "liveReview": {
+    "syntheticRepositoryOnly": true,
+    "calls": 13,
+    "concurrency": 5,
+    "tenFileUnderTwoSeconds": true,
+    "cases": [
+      {
+        "tool": "check_file",
+        "status": "needs_attention",
+        "wallMs": 426,
+        "filesReviewed": 1,
+        "totals": {
+          "filesChanged": 1,
+          "filesReviewed": 1,
+          "highConfidenceFlags": 0,
+          "mediumConfidenceWarnings": 2,
+          "lowConfidenceUncertain": 4
+        },
+        "cost": {
+          "totalCalls": 1,
+          "totalInputTokens": 991,
+          "totalOutputTokens": 185,
+          "totalEstimatedUsd": 4.1622e-05,
+          "reservedEstimatedUsd": 0.0015,
+          "inputPricePerMillion": 0.042,
+          "providerReportedCostUsd": null
+        }
+      },
+      {
+        "tool": "assess_pr",
+        "status": "needs_attention",
+        "wallMs": 600,
+        "filesReviewed": 1,
+        "totals": {
+          "filesChanged": 1,
+          "filesReviewed": 1,
+          "highConfidenceFlags": 0,
+          "mediumConfidenceWarnings": 2,
+          "lowConfidenceUncertain": 4
+        },
+        "cost": {
+          "totalCalls": 2,
+          "totalInputTokens": 1729,
+          "totalOutputTokens": 284,
+          "totalEstimatedUsd": 7.261800000000002e-05,
+          "reservedEstimatedUsd": 0.003,
+          "inputPricePerMillion": 0.042,
+          "providerReportedCostUsd": null
+        }
+      },
+      {
+        "tool": "review_change",
+        "status": "needs_attention",
+        "wallMs": 638,
+        "filesReviewed": 10,
+        "totals": {
+          "filesChanged": 10,
+          "filesReviewed": 10,
+          "highConfidenceFlags": 0,
+          "mediumConfidenceWarnings": 11,
+          "lowConfidenceUncertain": 31
+        },
+        "cost": {
+          "totalCalls": 10,
+          "totalInputTokens": 9559,
+          "totalOutputTokens": 1841,
+          "totalEstimatedUsd": 0.00040147800000000003,
+          "reservedEstimatedUsd": 0.014999999999999998,
+          "inputPricePerMillion": 0.042,
+          "providerReportedCostUsd": null
+        }
+      }
+    ]
+  },
+  "estimatedTotalUsd": 0.0005157180000000001,
+  "providerReportedCostUsd": null,
+  "pricingSource": "https://docs.typesafe.ai/models",
+  "limits": [
+    "Live integration smoke, not accuracy or calibration validation.",
+    "Latency is one synthetic-repository measurement, not an SLA.",
+    "Warnings and uncertain answers are retained; model judgments are not merge authorization.",
+    "The original browser and mutation capabilities remain available."
+  ]
+}

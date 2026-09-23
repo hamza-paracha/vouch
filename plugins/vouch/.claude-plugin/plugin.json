@@ -1,0 +1,11 @@
+{
+  "name": "vouch",
+  "version": "0.4.0",
+  "description": "Structured Jev code review, diff-aware mutation checks and browser workflow evidence for coding agents.",
+  "author": {
+    "name": "Vouch contributors"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

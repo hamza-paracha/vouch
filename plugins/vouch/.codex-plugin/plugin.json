@@ -1,0 +1,25 @@
+{
+  "name": "vouch",
+  "version": "0.4.0",
+  "license": "MIT",
+  "description": "Structured Jev code review, diff-aware mutation checks and browser workflow evidence for coding agents.",
+  "author": {
+    "name": "Vouch contributors"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Vouch",
+    "shortDescription": "Review code changes and verify app behavior.",
+    "longDescription": "Review diffs with structured Jev judgments, challenge tests with bounded mutations, and verify browser workflows and persisted state. Local evidence, explicit uncertainty and operator-controlled model budgets.",
+    "developerName": "Vouch contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Verify the local app changes and fix any reproduced failures."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

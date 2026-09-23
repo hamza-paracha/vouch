@@ -1,0 +1,35 @@
+# Example stack: copy next to a .env (see deploy/.env.example) and point the volume at durable storage.
+# Watchtower pulls new images of :latest within 5 minutes of CI pushing them.
+services:
+  runner:
+    image: ghcr.io/dowlucas/browser-jev-runner:latest
+    container_name: jev-runner
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      RUNNER_DATA: /data
+      # Browser contexts (sessions) open at once across all runs; about 0.3-0.5 GB each. 10 is the maximum.
+      RUNNER_CONTEXTS: "10"
+      RUNNER_ACTIVE_RUNS: "2"
+      # Prometheus metrics for a scraper on the same docker network; not published, not proxied.
+      RUNNER_METRICS_PORT: "9464"
+    user: "1000:1000"
+    init: true
+    # Chromium uses /dev/shm heavily; Docker's 64 MB default crashes tabs.
+    shm_size: "3gb"
+    mem_limit: "8g"
+    volumes:
+      - ${RUNNER_DATA_DIR:-./data}:/data
+    security_opt:
+      - apparmor:unconfined
+    networks:
+      - caddy-net
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    # Lets `docker compose down` finish in-flight steps and write reports. Watchtower uses its own
+    # (shorter) stop timeout; runs cut off by an update are re-queued on start.
+    stop_grace_period: 90s
+
+networks:
+  caddy-net:
+    external: true

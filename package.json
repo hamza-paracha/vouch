@@ -1,0 +1,85 @@
+{
+  "name": "vouch",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Verify browser workflows, challenge tests with mutations, and review code changes with Jev. Evidence for coding agents through MCP and CLI.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamza-paracha/vouch.git"
+  },
+  "homepage": "https://github.com/hamza-paracha/vouch#readme",
+  "bugs": "https://github.com/hamza-paracha/vouch/issues",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "explore": "tsx --env-file-if-exists=.env src/cli.ts",
+    "demo:server": "node demo/server.mjs",
+    "auth:save": "tsx scripts/save-auth.ts",
+    "jev:check": "tsx --env-file-if-exists=.env scripts/jev-check.ts",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts",
+    "runner": "tsx src/runner/server.ts",
+    "bench": "tsx --env-file-if-exists=.env scripts/recall-bench.ts",
+    "verify": "node bin/vouch.mjs",
+    "verify:mcp": "node bin/vouch.mjs --stdio",
+    "verify:demo": "tsx scripts/verify-demo.ts",
+    "plugin:build": "node scripts/build-plugin.mjs",
+    "verify:live": "tsx --env-file-if-exists=.env scripts/verify-live.ts",
+    "verify:install": "tsx scripts/verify-install.ts",
+    "verify:example": "tsx scripts/verify-example.ts",
+    "verify:change-demo": "tsx scripts/verify-change-demo.ts",
+    "verify:review-live": "tsx --env-file-if-exists=.env scripts/verify-review-live.ts",
+    "review:build": "node scripts/build-review-package.mjs",
+    "verify:review-install": "tsx scripts/verify-review-install.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@typesafe-ai/sdk": "^0.6.0",
+    "playwright": "^1.63.0",
+    "selfsigned": "5.5.0",
+    "tsx": "^4.23.13",
+    "typescript-ast": "npm:typescript@5.9.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.1",
+    "typescript": "^7.0.2"
+  },
+  "bin": {
+    "vouch": "bin/vouch.mjs",
+    "vouch-guard": "bin/guard.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "docs/",
+    "demo/",
+    "scripts/verify-demo.ts",
+    "scripts/verify-live.ts",
+    "test/helpers/verification-fixture.ts",
+    "LICENSE",
+    "README.md",
+    "examples/profile-app/",
+    "scripts/verify-example.ts",
+    "CHANGELOG.md",
+    "scripts/verify-change-demo.ts",
+    "test/helpers/change-fixture.ts",
+    "scripts/verify-review-live.ts"
+  ],
+  "keywords": [
+    "browser-testing",
+    "mcp",
+    "playwright",
+    "coding-agents",
+    "verification",
+    "codex",
+    "claude-code",
+    "mutation-testing",
+    "change-impact-analysis",
+    "code-review",
+    "jev"
+  ]
+}
