@@ -1,10 +1,6 @@
-<p align="center">
-  <img src="docs/assets/vouch-hero.png" alt="Vouch — Prove the change. Browser workflows. Independent assertions. Evidence." width="100%">
-</p>
-
-<h1 align="center">Vouch</h1>
-<p align="center"><strong>Your agent builds. Vouch verifies.</strong></p>
-<p align="center">Inspect the diff. Challenge the tests. Verify the browser flow. Bring evidence back to your coding agent.</p>
+<h1 align="center">vouch-jev</h1>
+<p align="center"><strong>Code review powered by Jev. Verified with evidence.</strong></p>
+<p align="center">vouch-jev uses Jev to review code changes, surface risks, and guide browser decisions. Challenge the findings with mutation tests and real browser assertions.</p>
 
 <p align="center">
   <a href="https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml"><img src="https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -21,11 +17,19 @@
   <a href="CONTRIBUTING.md">Contribute</a>
 </p>
 
+## Review the diff with structured Jev judgments
+
+vouch-jev exposes `review_change`, `assess_pr`, and `check_file`. Jev evaluates each changed file for breaking behavior, risk, missing tests, error handling, input validation, side effects and merge readiness. Reports preserve probabilities, warnings, uncertainty and incomplete context. These judgments complement executable browser and mutation evidence.
+
+Use the standalone `vouch-jev-guard` entry point for code review without Chromium, or all seven tools through the vouch-jev MCP server. Paid review requires explicit provider and persistent-budget configuration. A ten-file synthetic review measured **638 ms** in a real-provider check; this is a smoke measurement, not an accuracy claim or latency guarantee.
+
+[Setup, verdict semantics and examples →](docs/structured-review.md)
+
 ## A success toast is only half the story
 
 Your agent edits a form. The browser says **“Saved.”** But did the server persist the change?
 
-Vouch runs the interaction and checks the outcome through explicit assertions. A separate read of application state can catch a missing write even when the interface reports success. The agent gets the failing assertion, action history, and a replayable workflow to investigate, fix, and verify again.
+vouch-jev runs the interaction and checks the outcome through explicit assertions. A separate read of application state can catch a missing write even when the interface reports success. The agent gets the failing assertion, action history, and a replayable workflow to investigate, fix, and verify again.
 
 ```text
 Browser interaction         Independent state check        Result
@@ -39,9 +43,9 @@ This is the regression we reproduced and repaired through the installed MCP runt
 
 ## Challenge the tests behind the change
 
-A green test suite can still miss the bug. Vouch now reads your Git diff, identifies changed JavaScript/TypeScript functions and affected tests, then introduces small deliberate faults in disposable copies: an off-by-one boundary, a missing validation guard, a reversed condition.
+A green test suite can still miss the bug. vouch-jev now reads your Git diff, identifies changed JavaScript/TypeScript functions and affected tests, then introduces small deliberate faults in disposable copies: an off-by-one boundary, a missing validation guard, a reversed condition.
 
-If the tests still pass, Vouch returns the exact surviving patch and a focused regression-test suggestion. Baselines run twice, failing mutants are repeated, and the original checkout stays untouched by the mutation engine. No model API call is required.
+If the tests still pass, vouch-jev returns the exact surviving patch and a focused regression-test suggestion. Baselines run twice, failing mutants are repeated, and the original checkout stays untouched by the mutation engine. No model API call is required.
 
 ```sh
 npm run verify:change-demo
@@ -49,20 +53,13 @@ npm run verify:change-demo
 
 The demo starts with passing but weak tests, finds surviving mutations, adds explicit boundary/error assertions, and verifies that those tests now detect the same mutations. It demonstrates test sensitivity, not automatic proof of correctness.
 
-Use `vouch analyze --project /path/to/repo --base HEAD` for read-only analysis. Execution requires a project configuration and `--allow-exec`. [Code-aware verification →](docs/code-verification.md) · [Implementation roadmap →](docs/roadmap.md)
-
-## Review the diff with structured Jev judgments
-
-Vouch now includes `review_change`, `assess_pr`, and `check_file`. Jev evaluates each changed file for breaking behavior, risk, missing tests, error handling, input validation, side effects and merge readiness. Reports preserve probabilities, warnings, uncertainty and incomplete context. These judgments complement executable browser and mutation evidence.
-
-Use the standalone `vouch-guard` entry point for code review without Chromium, or all seven tools through the existing Vouch MCP server. Paid review requires explicit provider and persistent-budget configuration. A ten-file synthetic review measured **638 ms** in a real-provider check; this is a smoke measurement, not an accuracy claim or latency guarantee.
-
-[Setup, verdict semantics and examples →](docs/structured-review.md)
+Use `vouch-jev analyze --project /path/to/repo --base HEAD` for read-only analysis. Execution requires a project configuration and `--allow-exec`. [Code-aware verification →](docs/code-verification.md) · [Implementation roadmap →](docs/roadmap.md)
 
 ## Where it helps
 
-| When you need to… | Vouch provides… |
+| When you need to… | vouch-jev provides… |
 | --- | --- |
+| Review a code change with Jev | File-level judgments for risk, missing tests and merge readiness, with probabilities and uncertainty |
 | Find tests that miss a changed behavior | Diff-aware mutation runs with exact surviving patches |
 | Check an agent’s local app change | Real Chromium interactions followed by explicit assertions |
 | Reproduce a misleading success message | A separate same-origin JSON read to check the expected state |
@@ -73,7 +70,7 @@ Use the standalone `vouch-guard` entry point for code review without Chromium, o
 
 ## Try it in two minutes
 
-Requires **Node.js 22+**, npm, Git for code analysis, and Playwright Chromium for browser workflows. No API key or model service is needed.
+Requires **Node.js 22+**, npm, Git for code analysis, and Playwright Chromium for browser workflows. The browser demo below needs no API key or model service. Jev code review requires a TypeSafe API key and explicit model budgets; follow the [review setup](docs/structured-review.md#install-and-connect).
 
 ```sh
 git clone https://github.com/hamza-paracha/vouch.git
@@ -96,21 +93,23 @@ model calls          → 0
 
 The demo command exits successfully only when both expected outcomes are observed. For the separate disk-backed example, run `npm run verify:example`; it checks both the MCP result and the on-disk profile.
 
+The product and package are named `vouch-jev`; the source repository remains `hamza-paracha/vouch`. After `npm link`, use `vouch-jev` or `vouch-jev-guard`. Existing `vouch` and `vouch-guard` commands, `vouch.config.json`, and environment variables remain supported.
+
 ## Use it from your coding agent
 
 Register the stdio server using the **absolute path** to your checkout:
 
 ```sh
 # Codex
-codex mcp add vouch -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
+codex mcp add vouch-jev -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 
 # Claude Code — run from your application project
-claude mcp add --transport stdio vouch -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
+claude mcp add --transport stdio vouch-jev -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 ```
 
 Start a new task/session, then ask:
 
-> Use Vouch to inspect my disposable local app at http://127.0.0.1:3000. Verify the profile-saving flow, including the persisted display name through the app’s read endpoint. Read the evidence, fix any reproduced failure, and rerun the same assertions. Keep paid models disabled.
+> Use vouch-jev to inspect my disposable local app at http://127.0.0.1:3000. Verify the profile-saving flow, including the persisted display name through the app’s read endpoint. Read the evidence, fix any reproduced failure, and rerun the same assertions. Keep paid models disabled.
 
 | Tool | Purpose |
 | --- | --- |

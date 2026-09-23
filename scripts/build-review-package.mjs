@@ -14,12 +14,12 @@ try {
   await cp(join(root, "bin/guard.mjs"), join(output, "bin/guard.mjs")); await chmod(join(output, "bin/guard.mjs"), 0o755);
   await cp(join(root, "LICENSE"), join(output, "LICENSE"));
   await cp(join(root, "docs/structured-review.md"), join(output, "README.md"));
-  await writeFile(join(output, "package.json"), JSON.stringify({ name: "vouch-guard", version: source.version, private: true, type: "module",
+  await writeFile(join(output, "package.json"), JSON.stringify({ name: "vouch-jev-guard", version: source.version, private: true, type: "module",
     description: "Jev structured diff review for coding agents. No browser or code execution.", license: source.license, repository: source.repository,
-    engines: source.engines, bin: { "vouch-guard": "bin/guard.mjs" }, files: ["bin", "src", "README.md", "LICENSE"],
+    engines: source.engines, bin: { "vouch-jev-guard": "bin/guard.mjs", "vouch-guard": "bin/guard.mjs" }, files: ["bin", "src", "README.md", "LICENSE"],
     dependencies: Object.fromEntries(["@modelcontextprotocol/sdk", "@typesafe-ai/sdk", "tsx", "zod"].map(name => [name, source.dependencies[name]])),
   }, null, 2) + "\n");
-  // Seed exact resolved versions from Vouch's tested lock rather than resolving a new dependency graph.
+  // Seed exact resolved versions from vouch-jev's tested lock rather than resolving a new dependency graph.
   const lock = JSON.parse(await readFile(join(root, "package-lock.json"), "utf8"));
   const pkg = JSON.parse(await readFile(join(output, "package.json"), "utf8"));
   lock.name = pkg.name; lock.version = pkg.version; lock.packages[""] = { name: pkg.name, version: pkg.version, dependencies: pkg.dependencies, bin: pkg.bin, engines: pkg.engines, license: pkg.license };

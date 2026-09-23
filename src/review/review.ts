@@ -27,7 +27,7 @@ export interface GuardReport {
 function markdown(report: GuardReport): string {
   const files = [...report.files, ...(report.pr ? [report.pr] : [])];
   const safe = (s: string) => s.replace(/[\r\n|`]/g, " ");
-  return `# Vouch structured code review\n\n**${report.status}** — ${report.summary}\n\nBase: ${report.base}\n\n` +
+  return `# vouch-jev structured code review\n\n**${report.status}** — ${report.summary}\n\nBase: ${report.base}\n\n` +
     `| File / scope | Result | Flags | Warnings | Uncertain |\n| --- | --- | --- | --- | --- |\n` +
     files.map(f => `| ${safe(f.file)} | ${f.status}${f.truncated ? " (partial context)" : ""} | ${f.judgment?.flags.join(", ") ?? ""} | ${f.judgment?.warnings.join(", ") ?? ""} | ${f.judgment?.uncertain.join(", ") ?? ""} |`).join("\n") +
     `\n\n${report.limitations.map(s => "- " + s).join("\n")}\n\nFull probabilities and usage are in report.json. This review does not execute tests or authorize a merge.\n`;

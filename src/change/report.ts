@@ -15,7 +15,7 @@ export interface ChangeReport {
 const escape = (value: string) => value.replace(/[\r\n]+/g, " ").replace(/\|/g, "\\|").replace(/`/g, "'");
 export function markdownReport(report: ChangeReport) {
   const { summary: s } = report;
-  return `# Vouch change verification\n\n**${report.status}** — ${report.reason}\n\n` +
+  return `# vouch-jev change verification\n\n**${report.status}** — ${report.reason}\n\n` +
     `Snapshot: \`${report.plan.snapshotHash}\`  \nBase: \`${report.plan.baseCommit}\`\n\n` +
     `Detected: **${s.detected}** · Survived: **${s.survived}** · Inconclusive: **${s.inconclusive}** · Invalid: **${s.invalid}** · Untested candidates: **${s.untested}**\n\n` +
     `## Changed behavior and test reachability\n\n${report.plan.changedSymbols.map((s) => `- ${escape(s.file)}:${s.startLine} — ${escape(s.name)}`).join("\n") || "No changed callable symbols identified."}\n\n` +
