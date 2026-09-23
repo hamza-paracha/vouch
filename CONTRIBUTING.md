@@ -13,6 +13,7 @@ npm run typecheck
 npm test
 npm run verify:demo
 npm run verify:change-demo
+npm run review:build
 npm run verify:install
 npm run verify:example
 ```
@@ -21,7 +22,7 @@ On Linux, install Chromium with `--with-deps`. These commands need no provider c
 
 ## Make a focused change
 
-Explain the problem, the resulting behavior, and how you checked it. Add regression coverage for changes in behavior. Browser verifier code is in `src/verify/`; its tests are `test/verification*.test.ts`. Diff analysis and mutation execution live in `src/change/`, with `test/change-verification.test.ts`. The legacy explorer and runner remain in `src/` and have their own tests.
+Explain the problem, the resulting behavior, and how you checked it. Add regression coverage for changes in behavior. Browser verifier code is in `src/verify/`; its tests are `test/verification*.test.ts`. Diff analysis and mutation execution live in `src/change/`, with `test/change-verification.test.ts`. Structured review code lives in `src/review/` with simulated-provider tests in `test/review.test.ts`. The legacy explorer and runner remain in `src/` and have their own tests.
 
 Changes to HTTP restrictions, write permissions, model routing, budgets, cancellation, or evidence handling need tests that exercise the relevant failure path. Keep models disabled by default; model output must never replace independent assertions or expand permissions. Never automatically refund uncertain paid requests or silently retry writes.
 

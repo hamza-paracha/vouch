@@ -1,5 +1,11 @@
 # Validation evidence
 
+## Version 0.4 candidate
+
+The structured review layer adds three tools alongside browser and mutation verification. **140 tests pass**, including simulated SDK responses over the real MCP transport, bounded concurrency, persistent budgets, cancellation, malformed responses, secret scrubbing and partial-context reporting. The standalone package installs outside the checkout and exposes its three tools without Playwright or the AST parser.
+
+A bounded live check ran all three tools against synthetic code: **13 calls**, approximately **$0.000516** estimated input-token cost, and a **638 ms** ten-file review at concurrency 5. Warnings and uncertainty were preserved. These measurements establish connectivity and this particular latency result; they do not establish judgment accuracy or calibrated confidence. See [machine-readable evidence](review-validation.json) and [configuration and limits](structured-review.md).
+
 ## Version 0.3 candidate
 
 The local 0.3 candidate adds code-aware verification alongside the browser workflow engine. No paid model calls were made for these checks.

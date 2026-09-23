@@ -24,7 +24,7 @@ try {
   const readiness = JSON.parse(execFileSync(process.execPath, [binary, "--doctor"], { cwd: consumer, env: environment, encoding: "utf8" }));
   assert.equal(readiness.status, "ready");
   await client.connect(new StdioClientTransport({ command: process.execPath, args: [binary, "--stdio"], cwd: consumer, env: environment, stderr: "pipe" }));
-  assert.equal((await client.listTools()).tools.length, 4);
+  assert.equal((await client.listTools()).tools.length, 7);
   const result = await client.callTool({ name: "verify_workflow", arguments: fixture.workflow() });
   assert.equal(result.isError, false, JSON.stringify(result));
   const summary = result.structuredContent as Record<string, unknown>;

@@ -1,7 +1,7 @@
 {
   "name": "vouch",
-  "version": "0.3.0",
-  "description": "Verify browser workflows and challenge tests around code changes with reproducible local evidence.",
+  "version": "0.4.0",
+  "description": "Structured Jev code review, diff-aware mutation checks and browser workflow evidence for coding agents.",
   "author": {
     "name": "Vouch contributors"
   },

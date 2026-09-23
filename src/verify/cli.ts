@@ -1,3 +1,5 @@
+import { reviewCLI } from "../review/cli.ts";
+import { reviewOptionsFromEnv } from "../review/config.ts";
 import { changeCLI } from "../change/cli.ts";
 import { importSession } from "./sessions.ts";
 import { readFile, stat } from "node:fs/promises";
@@ -17,7 +19,10 @@ try {
   const args = process.argv.slice(2);
   const sessionOptions = { sessionDir: process.env.VOUCH_SESSION_DIR,
     tlsCA: process.env.VOUCH_TLS_CA_FILE ? await readFile(process.env.VOUCH_TLS_CA_FILE, "utf8") : undefined };
-  if (["analyze", "verify-change"].includes(args[0] ?? "")) {
+  if (["review", "assess-pr", "check-file"].includes(args[0] ?? "")) {
+    const { result, exitCode } = await reviewCLI(args, controller.signal);
+    process.stdout.write(JSON.stringify(result, null, 2) + "\n"); process.exitCode = exitCode;
+  } else if (["analyze", "verify-change"].includes(args[0] ?? "")) {
     const { result, exitCode } = await changeCLI(args, controller.signal);
     process.stdout.write(JSON.stringify(result, null, 2) + "\n"); process.exitCode = exitCode;
   } else if (args[0] === "--import-session" && args.length === 5 && args[3] === "--origin") {
@@ -31,7 +36,7 @@ try {
     process.stdout.write(JSON.stringify(result, null, 2) + "\n");
     process.exitCode = result.status === "inspected" ? 0 : 1;
   } else if (args.length !== 1 || args[0] === "--help") {
-    process.stdout.write("Usage: vouch --stdio | --doctor | --inspect <url> | <workflow.json>\n       vouch analyze|verify-change [--project <repo>] [--base <commit>] [--allow-exec]\n       vouch --import-session <name> <state.json> --origin <url>\nDefault: rules only, no paid calls. See docs/verification.md.\n");
+    process.stdout.write("Usage: vouch --stdio | --doctor | --inspect <url> | <workflow.json>\n       vouch analyze|verify-change [--project <repo>] [--base <commit>] [--allow-exec]\n       vouch --import-session <name> <state.json> --origin <url>\n       vouch review|assess-pr|check-file --project <repo> [--base <ref>] [--file <path>]\nDefault: rules only, no paid calls. See docs/verification.md.\n");
     process.exitCode = args[0] === "--help" ? 0 : 2;
   } else {
     const budget = budgetFromEnv(process.env);
@@ -42,7 +47,7 @@ try {
       projectRoot: process.env.VOUCH_PROJECT_ROOT, allowExecution: process.env.VOUCH_ALLOW_EXECUTION === "1",
     };
     if (args[0] === "--stdio") {
-      const server = createVerificationServer(options);
+      const server = createVerificationServer({ ...options, review: reviewOptionsFromEnv() });
       server.server.onclose = () => controller.abort();
       controller.signal.addEventListener("abort", () => { void server.close(); }, { once: true });
       await server.connect(new StdioServerTransport());

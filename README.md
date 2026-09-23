@@ -51,6 +51,14 @@ The demo starts with passing but weak tests, finds surviving mutations, adds exp
 
 Use `vouch analyze --project /path/to/repo --base HEAD` for read-only analysis. Execution requires a project configuration and `--allow-exec`. [Code-aware verification →](docs/code-verification.md) · [Implementation roadmap →](docs/roadmap.md)
 
+## Review the diff with structured Jev judgments
+
+Vouch now includes `review_change`, `assess_pr`, and `check_file`. Jev evaluates each changed file for breaking behavior, risk, missing tests, error handling, input validation, side effects and merge readiness. Reports preserve probabilities, warnings, uncertainty and incomplete context. These judgments complement executable browser and mutation evidence.
+
+Use the standalone `vouch-guard` entry point for code review without Chromium, or all seven tools through the existing Vouch MCP server. Paid review requires explicit provider and persistent-budget configuration. A ten-file synthetic review measured **638 ms** in a real-provider check; this is a smoke measurement, not an accuracy claim or latency guarantee.
+
+[Setup, verdict semantics and examples →](docs/structured-review.md)
+
 ## Where it helps
 
 | When you need to… | Vouch provides… |
@@ -59,7 +67,7 @@ Use `vouch analyze --project /path/to/repo --base HEAD` for read-only analysis. 
 | Check an agent’s local app change | Real Chromium interactions followed by explicit assertions |
 | Reproduce a misleading success message | A separate same-origin JSON read to check the expected state |
 | Give an agent enough context to fix a failure | Structured reports, failing observations, action records, and a replay file |
-| Connect verification to your coding workflow | Four MCP tools, a CLI, and local plugin bundles for Codex and Claude Code |
+| Connect verification to your coding workflow | Seven MCP tools, a CLI, and local plugin bundles for Codex and Claude Code |
 | Handle a control label that differs from the intent | Optional Jev selection, with an explicitly enabled stronger-model fallback |
 | Keep routine verification predictable | Models off by default, origin/write restrictions, deadlines, and persistent paid-call limits |
 
@@ -106,6 +114,9 @@ Start a new task/session, then ask:
 
 | Tool | Purpose |
 | --- | --- |
+| `review_change` | Jev review of changed files with structured verdicts and uncertainty |
+| `assess_pr` | File-level review plus PR scope, split, security and urgency assessment |
+| `check_file` | One changed file, one bounded model request |
 | `analyze_change` | Inspect the configured repository diff, affected tests and mutation candidates |
 | `verify_change` | Execute configured tests and challenge them with bounded mutations in disposable copies |
 | `inspect_page` | Discover accessible controls without allowing HTTP writes or calling models |

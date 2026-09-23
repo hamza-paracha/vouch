@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 — Structured code review
+
+- Added three Jev review tools, validated primitive responses, advisory confidence bands, bounded parallel calls and persistent cost reservations.
+- Added a review-only CLI/MCP entry point and standalone package without browser dependencies.
+- Added diff filtering, explicit missing-context reporting, source scrubbing, real MCP/provider tests and measured live smoke evidence.
+
 ## 0.3.0 — Change verification and browser foundations
 
 - Added diff-aware JS/TS analysis, reverse-import test discovery, and bounded behavioral mutation runs in disposable repository copies.

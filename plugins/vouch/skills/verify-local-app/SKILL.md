@@ -1,9 +1,9 @@
 ---
 name: verify-local-app
-description: Verify local app changes with browser workflows and diff-aware mutation evidence using Vouch. Use after implementation to reproduce failures, expose weak tests, and rerun focused assertions.
+description: Review code changes with Jev and verify local app behavior with browser workflows and diff-aware mutation evidence using Vouch. Use after implementation to reproduce failures, expose weak tests, and rerun focused assertions.
 ---
 
-Use both sources of evidence when relevant to the requested change: browser workflows check application outcomes; code-aware analysis challenges the tests around a diff. Neither establishes whole-app correctness.
+Use the relevant evidence for the requested change: Jev provides advisory diff judgments, mutation analysis challenges tests, and browser workflows check application outcomes. None establishes whole-app correctness.
 
 For browser behavior:
 
@@ -22,4 +22,11 @@ For JavaScript/TypeScript changes:
 3. Investigate surviving mutations against the intended requirements. Add focused regression tests for real omissions; equivalent or unreachable mutations may need explanation. Never invent expected behavior or change product requirements just to improve detection.
 4. Rerun against the same base. Baseline failures, timeouts and unstable results are not success. `evidence_collected` means configured tests detected the sampled mutations; inspect untested counts and limitations. See [code verification configuration and evidence](../../docs/code-verification.md).
 
-Report the behavior checked, outcome, remaining gaps, evidence paths and any model usage. Code verification makes no model calls; browser decisions remain deterministic unless explicitly enabled by the operator.
+For structured Jev review:
+
+1. Use `review_change` for a diff, `check_file` for one changed file, or `assess_pr` for per-file and overall scope judgments. Select the base before the change; `HEAD` covers uncommitted work. These tools read local Git state, not a remote PR.
+2. The operator must configure the project and persistent `JEV_GUARD_*` budget. Only send source authorized for provider review. Do not raise budgets, reset ledgers or retry failed paid calls merely to get a result.
+3. Investigate flags against source and requirements. Report warnings, uncertain judgments, skipped files and truncated context. A high confidence value is not a repository-calibrated accuracy guarantee or permission to merge. Never weaken tests to align with a model verdict.
+4. Use executable tests and the browser/mutation tools to check proposed fixes. Read [structured review setup and semantics](../../docs/structured-review.md) for the actual Noul/Score shapes, confidence provenance, cost reporting and standalone review-only server.
+
+Report the behavior checked, outcome, remaining gaps, evidence paths and any model usage. Mutation verification makes no model calls; Jev review requires an explicitly enabled paid budget; browser decisions remain deterministic unless explicitly enabled by the operator.

@@ -1,16 +1,16 @@
 {
   "name": "vouch",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "MIT",
-  "description": "Verify browser workflows and challenge tests around code changes with reproducible local evidence.",
+  "description": "Structured Jev code review, diff-aware mutation checks and browser workflow evidence for coding agents.",
   "author": {
     "name": "Vouch contributors"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Vouch",
-    "shortDescription": "Browser checks and diff-aware mutation evidence.",
-    "longDescription": "Inspect controls, verify workflows and persisted state, analyze changed functions, and expose weak tests with bounded mutation runs in disposable copies. Local evidence for the coding agent.",
+    "shortDescription": "Review code changes and verify app behavior.",
+    "longDescription": "Review diffs with structured Jev judgments, challenge tests with bounded mutations, and verify browser workflows and persisted state. Local evidence, explicit uncertainty and operator-controlled model budgets.",
     "developerName": "Vouch contributors",
     "category": "Productivity",
     "capabilities": [

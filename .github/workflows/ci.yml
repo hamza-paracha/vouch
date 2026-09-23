@@ -39,5 +39,7 @@ jobs:
       - run: npm run verify:demo
       - run: npm run verify:install
       - run: npm run verify:example
+      - run: npm run review:build
+      - run: npm run verify:review-install
       - run: npm run plugin:build
       - run: node out/plugin/vouch/bin/vouch.mjs --doctor

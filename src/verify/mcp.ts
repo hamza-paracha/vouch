@@ -1,3 +1,5 @@
+import { registerReviewTools } from "../review/mcp.ts";
+import type { ReviewOptions } from "../review/review.ts";
 import { analyzeChange } from "../change/analyze.ts";
 import { verifyChange, type ChangeOptions } from "../change/verify.ts";
 import { changeInputSchema, changeExecutionSchema } from "../change/schema.ts";
@@ -9,7 +11,7 @@ import { inspectInputSchema, inspectLocalPage } from "./inspect.ts";
 import { redact } from "./redact.ts";
 import { VERSION } from "./version.ts";
 
-export function createVerificationServer(options: VerifyOptions & ChangeOptions = {}): McpServer {
+export function createVerificationServer(options: VerifyOptions & ChangeOptions & { review?: ReviewOptions } = {}): McpServer {
   const server = new McpServer({ name: "vouch", version: VERSION });
   const budget = options.budget ?? new ModelBudget();
   let busy = false;
@@ -85,5 +87,6 @@ export function createVerificationServer(options: VerifyOptions & ChangeOptions 
     } catch (error) { return { isError: true, content: [{ type: "text", text: redact(error instanceof Error ? error.message : "Change verification failed") }] }; }
     finally { busy = false; }
   });
+  registerReviewTools(server, { projectRoot: options.projectRoot, outputDir: options.outputDir, signal: options.signal, ...options.review });
   return server;
 }
