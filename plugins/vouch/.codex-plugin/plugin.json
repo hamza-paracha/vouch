@@ -1,20 +1,25 @@
 {
   "name": "vouch",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
-  "description": "Verify local browser workflows with reproducible evidence and bounded adaptive decisions.",
+  "description": "Verify browser workflows and challenge tests around code changes with reproducible local evidence.",
   "author": {
     "name": "Vouch contributors"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Vouch",
-    "shortDescription": "Check local app changes with browser evidence.",
-    "longDescription": "Inspect controls, execute scoped workflows, verify persisted state, and return evidence to the coding agent. Deterministic by default, with optional budgeted Jev routing.",
+    "shortDescription": "Browser checks and diff-aware mutation evidence.",
+    "longDescription": "Inspect controls, verify workflows and persisted state, analyze changed functions, and expose weak tests with bounded mutation runs in disposable copies. Local evidence for the coding agent.",
     "developerName": "Vouch contributors",
     "category": "Productivity",
-    "capabilities": ["Read", "Write"],
-    "defaultPrompt": ["Verify the local app changes and fix any reproduced failures."]
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Verify the local app changes and fix any reproduced failures."
+    ]
   },
   "mcpServers": "./.mcp.json"
 }

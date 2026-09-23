@@ -1,8 +1,10 @@
 {
   "name": "vouch",
-  "version": "0.2.0",
-  "description": "Verify local browser workflows with reproducible evidence and bounded adaptive decisions.",
-  "author": { "name": "Vouch contributors" },
+  "version": "0.3.0",
+  "description": "Verify browser workflows and challenge tests around code changes with reproducible local evidence.",
+  "author": {
+    "name": "Vouch contributors"
+  },
   "license": "MIT",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"

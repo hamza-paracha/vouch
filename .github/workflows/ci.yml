@@ -35,6 +35,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run typecheck
       - run: npm test
+      - run: npm run verify:change-demo
       - run: npm run verify:demo
       - run: npm run verify:install
       - run: npm run verify:example
