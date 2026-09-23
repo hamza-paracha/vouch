@@ -1,4 +1,4 @@
-# Contributing to Vouch
+# Contributing to vouch-jev
 
 Reproducible bugs, clear documentation, and focused fixes are welcome. This is an alpha; help us make its supported local workflows dependable before widening its scope.
 

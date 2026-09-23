@@ -10,7 +10,7 @@ export async function changeCLI(args: string[], signal: AbortSignal) {
     if ((arg === "--base" || arg === "--project") && args[i + 1] && !args[i + 1]!.startsWith("--")) {
       const value = args[++i]!; if (arg === "--base") base = value; else projectRoot = value; continue;
     }
-    throw new Error("Usage: vouch analyze|verify-change [--project <repository>] [--base <commit>] [--allow-exec]");
+    throw new Error("Usage: vouch-jev analyze|verify-change [--project <repository>] [--base <commit>] [--allow-exec]");
   }
   projectRoot = resolve(projectRoot);
   if (action === "analyze") return { exitCode: 0, result: await analyzeChange({ base }, projectRoot, signal) };

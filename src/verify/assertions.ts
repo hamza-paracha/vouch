@@ -31,15 +31,27 @@ export async function assertJson(context: BrowserContext, step: Extract<Step, { 
   timeout: number, signal: AbortSignal, tls: { allowInsecureTLS?: boolean; tlsCA?: string }) {
   const deadline = Date.now() + timeout;
   let actual: unknown;
+  let observedMismatch = false;
   do {
     signal.throwIfAborted();
     const cookie = (await context.cookies(url)).map((c) => `${c.name}=${c.value}`).join("; ");
-    actual = await readJson(url, cookie, AbortSignal.any([signal, AbortSignal.timeout(Math.max(1, deadline - Date.now()))]), tls);
+    if (observedMismatch && Date.now() >= deadline) break;
+    const readDeadline = AbortSignal.timeout(Math.max(1, deadline - Date.now()));
+    try {
+      actual = await readJson(url, cookie, AbortSignal.any([signal, readDeadline]), tls);
+    } catch (error) {
+      signal.throwIfAborted();
+      // A retry exhausting the assertion window must retain the completed mismatch.
+      // Transport errors and deadlines without any observation remain errors.
+      if (observedMismatch && readDeadline.aborted && error instanceof Error && error.name === "AbortError") break;
+      throw error;
+    }
     for (const key of step.field) actual = actual !== null && typeof actual === "object" && Object.hasOwn(actual, key) ? (actual as Record<string, unknown>)[key] : undefined;
     if (Object.is(actual, step.equals)) return;
+    observedMismatch = true;
     if (Date.now() < deadline) await delay(Math.min(100, deadline - Date.now()), undefined, { signal });
   } while (Date.now() < deadline);
-  throw new VerificationStop("failed", `Persisted-state assertion failed at ${step.field.join(".") || "<root>"}: expected ${JSON.stringify(step.equals)}, received ${JSON.stringify(actual)?.slice(0, 300) ?? "missing"}`);
+  throw new VerificationStop("failed", `Persisted-state assertion failed at ${step.field.join(".") || "<root>"}: expected ${JSON.stringify(step.equals)}, last observed ${JSON.stringify(actual)?.slice(0, 300) ?? "missing"}`);
 }
 
 export async function assertDOM(page: Page, step: Extract<Step, { kind: "assertSelector" | "assertAttribute" }>, timeout: number, signal: AbortSignal) {

@@ -1,12 +1,12 @@
-# Vouch Guard: structured code review
+# vouch-jev Guard: structured code review
 
-Vouch Guard reviews a Git diff using Jev's `noul`, `choice` and `score` primitives. Each changed file gets one model request containing eight questions: breaking behavior, risk, change type, missing tests, error handling, input validation, side effects and merge readiness. A PR assessment adds four questions about scope, splitting, security relevance and urgency.
+vouch-jev Guard reviews a Git diff using Jev's `noul`, `choice` and `score` primitives. Each changed file gets one model request containing eight questions: breaking behavior, risk, change type, missing tests, error handling, input validation, side effects and merge readiness. A PR assessment adds four questions about scope, splitting, security relevance and urgency.
 
-This is an advisory review layer. It does not run project code, execute browser workflows or merge changes. The full Vouch package also provides browser and mutation verification; the standalone Guard package runs without Playwright, Chromium or the AST parser.
+This is an advisory review layer. It does not run project code, execute browser workflows or merge changes. The full vouch-jev package also provides browser and mutation verification; the standalone Guard package runs without Playwright, Chromium or the AST parser.
 
 ## Install and connect
 
-From the Vouch source checkout:
+From the vouch-jev source checkout:
 
 ```sh
 npm ci
@@ -38,11 +38,11 @@ Reservations persist across calls and server restarts. The example permits at mo
 Register the review-only MCP server:
 
 ```sh
-codex mcp add vouch-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
-claude mcp add --transport stdio vouch-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
+codex mcp add vouch-jev-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
+claude mcp add --transport stdio vouch-jev-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
 ```
 
-Make the environment above available to the registered server, using your client's MCP environment configuration or the launching environment. Restart the client task/session after changing its configuration. The full `bin/vouch.mjs --stdio` server exposes these same three tools alongside Vouch's four existing tools.
+Make the environment above available to the registered server, using your client's MCP environment configuration or the launching environment. Restart the client task/session after changing its configuration. The full `bin/vouch.mjs --stdio` server exposes these same three tools alongside vouch-jev's four existing tools.
 
 ## Tools and CLI
 
@@ -60,11 +60,11 @@ node bin/guard.mjs assess-pr --project /path/to/repo --base main --title 'Inclus
 node bin/guard.mjs check-file --project /path/to/repo --file src/pricing.ts --base HEAD
 ```
 
-The full Vouch CLI supports the same commands. `--focus path` can be repeated with `review`. Exit codes are `0` clean, `1` attention/high risk, and `2` error, cancellation or exhausted budget. A no-change result explicitly says that no model review was performed.
+The full vouch-jev CLI supports the same commands. `--focus path` can be repeated with `review`. Exit codes are `0` clean, `1` attention/high risk, and `2` error, cancellation or exhausted budget. A no-change result explicitly says that no model review was performed.
 
 Ask your coding agent:
 
-> Review my diff with review_change. Investigate flags against the source and requirements, report uncertain judgments, and use the existing tests and Vouch's browser/mutation tools to validate fixes. A model's merge-readiness answer is not permission to merge.
+> Review my diff with review_change. Investigate flags against the source and requirements, report uncertain judgments, and use the existing tests and vouch-jev's browser/mutation tools to validate fixes. A model's merge-readiness answer is not permission to merge.
 
 ## Verdicts and confidence
 

@@ -19,7 +19,13 @@ try {
   const consumer = join(directory, "consumer");
   await mkdir(consumer);
   execFileSync("npm", ["install", "--prefix", consumer, "--ignore-scripts", "--no-audit", "--no-fund", join(directory, packed.filename)], { stdio: "pipe" });
-  const binary = join(consumer, "node_modules/vouch/bin/vouch.mjs");
+  const binary = join(consumer, "node_modules/vouch-jev/bin/vouch.mjs");
+  for (const command of ["vouch-jev", "vouch"]) {
+    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: vouch-jev /);
+  }
+  for (const command of ["vouch-jev-guard", "vouch-guard"]) {
+    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: vouch-jev-guard /);
+  }
   const environment = { PATH: process.env.PATH ?? "", HOME: process.env.HOME ?? "", VERIFY_MODEL_MAX_CALLS: "0", VERIFY_OUTPUT_DIR: join(directory, "reports"), VOUCH_PROJECT_ROOT: changes.root, VOUCH_ALLOW_EXECUTION: "1" };
   const readiness = JSON.parse(execFileSync(process.execPath, [binary, "--doctor"], { cwd: consumer, env: environment, encoding: "utf8" }));
   assert.equal(readiness.status, "ready");

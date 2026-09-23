@@ -1,17 +1,17 @@
 {
-  "name": "vouch",
+  "name": "vouch-jev",
   "version": "0.4.0",
   "license": "MIT",
-  "description": "Structured Jev code review, diff-aware mutation checks and browser workflow evidence for coding agents.",
+  "description": "Jev-powered code review and browser decisions, backed by mutation tests and browser assertions. Evidence for coding agents through MCP and CLI.",
   "author": {
-    "name": "Vouch contributors"
+    "name": "vouch-jev contributors"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Vouch",
-    "shortDescription": "Review code changes and verify app behavior.",
+    "displayName": "vouch-jev",
+    "shortDescription": "Jev-powered code review with executable evidence.",
     "longDescription": "Review diffs with structured Jev judgments, challenge tests with bounded mutations, and verify browser workflows and persisted state. Local evidence, explicit uncertainty and operator-controlled model budgets.",
-    "developerName": "Vouch contributors",
+    "developerName": "vouch-jev contributors",
     "category": "Productivity",
     "capabilities": [
       "Read",

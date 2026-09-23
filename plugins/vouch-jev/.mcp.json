@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "vouch-jev": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/bin/vouch.mjs",
+        "--stdio"
+      ]
+    }
+  }
+}

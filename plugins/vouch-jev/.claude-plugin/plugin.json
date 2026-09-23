@@ -1,0 +1,11 @@
+{
+  "name": "vouch-jev",
+  "version": "0.4.0",
+  "description": "Jev-powered code review and browser decisions, backed by mutation tests and browser assertions. Evidence for coding agents through MCP and CLI.",
+  "author": {
+    "name": "vouch-jev contributors"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

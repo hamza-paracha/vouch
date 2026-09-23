@@ -1,8 +1,8 @@
 {
-  "name": "vouch",
+  "name": "vouch-jev",
   "version": "0.4.0",
   "private": true,
-  "description": "Verify browser workflows, challenge tests with mutations, and review code changes with Jev. Evidence for coding agents through MCP and CLI.",
+  "description": "Jev-powered code review and browser decisions, backed by mutation tests and browser assertions. Evidence for coding agents through MCP and CLI.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -49,6 +49,8 @@
     "typescript": "^7.0.2"
   },
   "bin": {
+    "vouch-jev": "bin/vouch.mjs",
+    "vouch-jev-guard": "bin/guard.mjs",
     "vouch": "bin/vouch.mjs",
     "vouch-guard": "bin/guard.mjs"
   },

@@ -12,7 +12,7 @@ import { redact } from "./redact.ts";
 import { VERSION } from "./version.ts";
 
 export function createVerificationServer(options: VerifyOptions & ChangeOptions & { review?: ReviewOptions } = {}): McpServer {
-  const server = new McpServer({ name: "vouch", version: VERSION });
+  const server = new McpServer({ name: "vouch-jev", version: VERSION });
   const budget = options.budget ?? new ModelBudget();
   let busy = false;
   server.registerTool("inspect_page", {

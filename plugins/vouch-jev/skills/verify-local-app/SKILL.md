@@ -1,6 +1,6 @@
 ---
 name: verify-local-app
-description: Review code changes with Jev and verify local app behavior with browser workflows and diff-aware mutation evidence using Vouch. Use after implementation to reproduce failures, expose weak tests, and rerun focused assertions.
+description: Review code changes with Jev and verify local app behavior with browser workflows and diff-aware mutation evidence using vouch-jev. Use after implementation to reproduce failures, expose weak tests, and rerun focused assertions.
 ---
 
 Use the relevant evidence for the requested change: Jev provides advisory diff judgments, mutation analysis challenges tests, and browser workflows check application outcomes. None establishes whole-app correctness.

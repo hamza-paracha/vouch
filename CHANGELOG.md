@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — vouch-jev
+
+- Renamed the product, package and plugin to `vouch-jev`, with Jev-powered review leading the documentation.
+- Added `vouch-jev` and `vouch-jev-guard` commands; preserved `vouch` and `vouch-guard` aliases and existing configuration.
+- Removed the README hero image.
+- Preserved a completed persisted-state mismatch when a polling retry hits its deadline; cancellation and transport errors retain their original meaning.
+
 ## 0.4.0 — Structured code review
 
 - Added three Jev review tools, validated primitive responses, advisory confidence bands, bounded parallel calls and persistent cost reservations.
