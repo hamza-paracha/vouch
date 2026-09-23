@@ -147,3 +147,22 @@ it('disposable snapshots preserve executable test scripts', { skip: process.plat
     assert.equal(report.status,'gaps_found', report.reason);
   } finally { await fixture.close(); }
 });
+
+it('setup source links cannot redirect mutations into the original checkout', async () => {
+  const fixture = await changeFixture();
+  try {
+    const source = join(fixture.root, 'src/pricing.mjs');
+    const configPath = join(fixture.root, 'vouch.config.json');
+    const config = JSON.parse(await readFile(configPath, 'utf8'));
+    for (const setup of [
+      `fs.unlinkSync('src/pricing.mjs');fs.symlinkSync(${JSON.stringify(source)},'src/pricing.mjs');`,
+      `fs.rmSync('src',{recursive:true});fs.symlinkSync(${JSON.stringify(join(fixture.root, 'src'))},'src','dir');`,
+    ]) {
+      config.setupCommand = ['node', '-e', `const fs=require('node:fs');${setup}`];
+      await writeFile(configPath, JSON.stringify(config));
+      const report = await verifyChange({ confirmCodeExecution: true }, { projectRoot: fixture.root, allowExecution: true, outputDir: join(fixture.root, 'out') });
+      assert.equal(await readFile(source, 'utf8'), changedPricing, 'Original source must remain unchanged');
+      assert.equal(report.status, 'error'); assert.equal(report.baseline.length, 0); assert.equal(report.mutations.length, 0);
+    }
+  } finally { await fixture.close(); }
+});

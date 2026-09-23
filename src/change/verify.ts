@@ -1,5 +1,5 @@
 import { constants } from "node:fs";
-import { cp, mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, mkdir, readFile, rm, writeFile, lstat, realpath } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -62,7 +62,15 @@ export async function verifyChange(raw: unknown, options: ChangeOptions): Promis
     if (config.setupCommand) {
       report.setup = await run(config.setupCommand, template);
       if (report.setup.outcome !== "passed") { report.reason = "Setup did not pass; no mutations executed"; return await finish(); }
-      for (const [name, data] of snapshot.files) if (!(await readFile(join(template, name))).equals(data)) throw new Error("Setup changed a captured source file; use a setup command that only prepares dependencies");
+      const canonicalTemplate = await realpath(template);
+      for (const [name, data] of snapshot.files) {
+        const path = join(canonicalTemplate, name);
+        // A byte-identical source symlink can redirect later mutant writes into the checkout.
+        // Reject links in the file itself and in any parent directory before copying the template.
+        if (!(await lstat(path)).isFile() || await realpath(path) !== path)
+          throw new Error("Setup replaced a captured source path with a link or non-regular file");
+        if (!(await readFile(path)).equals(data)) throw new Error("Setup changed a captured source file; use a setup command that only prepares dependencies");
+      }
     }
     if (config.validationCommand) {
       const path = await fresh("validation"); report.validation = await run(config.validationCommand, path); await rm(path, { recursive: true, force: true });

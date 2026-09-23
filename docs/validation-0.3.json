@@ -2,8 +2,8 @@
   "version": "0.3.0-candidate",
   "recordedAt": "2026-09-23T02:57:09.051539+00:00",
   "automated": {
-    "tests": 129,
-    "passed": 129,
+    "tests": 132,
+    "passed": 132,
     "typecheck": "passed",
     "typescriptCompiler": "7.0.2",
     "browserDemo": "passed",
@@ -121,5 +121,11 @@
     "Only bounded sampled mutations are challenged.",
     "Execution is trusted repository code, not an OS sandbox.",
     "Browser targets remain exact-origin local HTTP(S); no WebSocket or remote login support."
+  ],
+  "reviewedAt": "2026-09-23T03:05:49.761900+00:00",
+  "reviewRegressions": [
+    "Literal URL assertions do not accept wildcard matches.",
+    "Session redaction cannot create a false exact control match; both model tiers receive scrubbed data.",
+    "Setup source file/directory links are rejected before mutation execution; original checkout remains unchanged."
   ]
 }

@@ -55,7 +55,7 @@ Commands are argument arrays, executed without a shell. Use `["npm", "test"]` fo
 }
 ```
 
-Setup prepares dependencies once in a temporary template; it must not modify captured source files. Every test attempt starts from a separate copy. A validation command is optional; mutants rejected by validation are **invalid**, not counted as detected by tests.
+Setup prepares dependencies once in a temporary template; it must not modify captured source files or replace them or their parent directories with symbolic links. Every test attempt starts from a separate copy. A validation command is optional; mutants rejected by validation are **invalid**, not counted as detected by tests.
 
 An exact `$VOUCH_TEST_FILES` argument expands to statically affected test paths. It fails if no affected tests can be found. Use a full-suite command when tests depend on aliases, dynamic loading or framework conventions the analyzer cannot resolve.
 

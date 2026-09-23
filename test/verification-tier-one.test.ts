@@ -10,6 +10,7 @@ import { interceptionCertificate } from "../src/verify/tls.ts";
 import { verifyWorkflow } from "../src/verify/runtime.ts";
 import { inspectLocalPage } from "../src/verify/inspect.ts";
 import { importSession } from "../src/verify/sessions.ts";
+import { ModelBudget } from "../src/verify/routing.ts";
 import { verifyInputSchema } from "../src/verify/schema.ts";
 
 async function app(handler: RequestListener, secure = false) {
@@ -115,5 +116,46 @@ it("DOM assertions fail wrong attributes and ambiguous selectors abstain", async
     assert.equal((await run({ kind: "assertAttribute", selector: "#status", attribute: "data-state", equals: "wrong" })).status, "failed");
     assert.equal((await run({ kind: "assertSelector", selector: "span" })).status, "abstained");
     assert.equal((await run({ kind: "assertSelector", selector: "#missing", state: "detached" })).status, "passed");
+  } finally { await server.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
+it("URL assertions compare literal URLs rather than accepting wildcard matches", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "vouch-url-exact-"));
+  const server = await app((_req, res) => res.end('<h1>Order</h1>'));
+  try {
+    const result = await verifyWorkflow({ url: server.url + '/orders/123', stepTimeoutMs: 300,
+      steps: [{ kind: 'assertUrl', path: '/orders/*' }] }, { outputDir: dir });
+    assert.equal(result.status, 'failed', 'A literal asterisk must not match an arbitrary order');
+    const literal = await verifyWorkflow({ url: server.url + '/orders/*',
+      steps: [{ kind: 'assertUrl', path: '/orders/*' }] }, { outputDir: dir });
+    assert.equal(literal.status, 'passed', literal.reason);
+  } finally { await server.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
+it("session redaction cannot create a false exact action match", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "vouch-session-routing-"));
+  const server = await app((_req, res) => res.end('<button onclick="document.querySelector(\'p\').textContent=\'Clicked\'">Save B</button><p>Ready</p>'));
+  try {
+    const state = join(dir, 'state.json');
+    await writeFile(state, JSON.stringify({ cookies: [], origins: [{ origin: server.url, localStorage: [{ name: 'first', value: 'A' }, { name: 'second', value: 'B' }] }] }));
+    await importSession('short-values', state, server.url, dir);
+    const result = await verifyWorkflow({ url: server.url, session: 'short-values',
+      steps: [{ kind: 'choose', intent: 'Save A', candidates: [{ role: 'button', name: 'Save B' }] }, { kind: 'assertText', text: 'Clicked' }] },
+      { outputDir: dir, sessionDir: dir });
+    assert.equal(result.status, 'abstained', 'Scrubbing A and B must not turn Save B into an exact match for Save A');
+    assert.equal(result.cost.attemptedCalls, 0);
+    const exact = await verifyWorkflow({ url: server.url, session: 'short-values',
+      steps: [{ kind: 'choose', intent: 'Save B' }, { kind: 'assertText', text: 'Clicked' }] }, { outputDir: dir, sessionDir: dir });
+    assert.equal(exact.status, 'passed', exact.reason);
+    const seen: string[] = [];
+    const adapter = (probability: number) => ({ decide: async (intent: string, candidates: unknown) => {
+      seen.push(JSON.stringify({ intent, candidates }));
+      return { model: 'synthetic', selected: 0, selectedProbability: probability, reportedConfidence: probability, inputTokens: 0, outputTokens: 0 };
+    } });
+    const adaptive = await verifyWorkflow({ url: server.url, session: 'short-values', policy: 'adaptive',
+      steps: [{ kind: 'choose', intent: 'Persist A', candidates: [{ role: 'button', name: 'Save B' }] }, { kind: 'assertText', text: 'Clicked' }] },
+      { outputDir: dir, sessionDir: dir, budget: new ModelBudget(2, 1, 0.01), adapter: adapter(0.2), strongerAdapter: adapter(1) });
+    assert.equal(adaptive.status, 'passed', adaptive.reason); assert.equal(seen.length, 2);
+    assert.ok(seen.every(value => !value.includes('Persist A') && !value.includes('Save B') && value.includes('[REDACTED]')));
   } finally { await server.close(); await rm(dir, { recursive: true, force: true }); }
 });

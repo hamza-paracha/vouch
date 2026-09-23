@@ -76,6 +76,11 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
   // Validate all URLs before any browser work or writes occur.
   for (const step of input.steps) if ("path" in step) pathUrl(step.path, target.origin);
   const session = await loadSession(input.session, target.origin, options.sessionDir);
+  // Keep exact matching on the actual labels; scrub only at the external model boundary.
+  const privateAdapter = (adapter?: DecisionAdapter): DecisionAdapter | undefined => adapter && ({
+    model: adapter.model,
+    decide: (intent, candidates, signal) => adapter.decide(redact(intent, session.secrets), redactBrowserEvidence(candidates, session.secrets), signal),
+  });
   const budget = options.budget ?? new ModelBudget();
   const started = Date.now();
   const runId = `verify-${randomUUID()}`;
@@ -177,7 +182,7 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
           }
           if (!candidates.length) throw new VerificationStop("abstained", "No unique visible allowed candidates were available");
           const selected = await selectControl({
-            intent: redact(step.intent, session.secrets), candidates: redactBrowserEvidence(candidates, session.secrets), policy: input.policy, adapter: options.adapter, strongerAdapter: options.strongerAdapter,
+            intent: step.intent, candidates, policy: input.policy, adapter: privateAdapter(options.adapter), strongerAdapter: privateAdapter(options.strongerAdapter),
             budget, calls: report.calls, step: index, signal: controller.signal,
           });
           active.route = selected.route;
@@ -190,7 +195,7 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
           await page.getByText(step.text, { exact: true }).waitFor({ state: "visible", timeout: timeout() });
           break;
         case "assertUrl":
-          await page.waitForURL(pathUrl(step.path, target.origin), { timeout: timeout() });
+          await page.waitForURL((url) => url.href === pathUrl(step.path, target.origin), { timeout: timeout() });
           break;
         case "assertSelector":
         case "assertAttribute":

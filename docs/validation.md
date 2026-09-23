@@ -4,11 +4,12 @@
 
 The local 0.3 candidate adds code-aware verification alongside the browser workflow engine. No paid model calls were made for these checks.
 
-- **129 automated tests pass**, including the existing explorer, browser verifier, TLS redirects/cookies, named sessions, DOM assertions, mutation execution, executable file modes, patch application and the real MCP transport.
+- **132 automated tests pass**, including the existing explorer, browser verifier, TLS redirects/cookies, named sessions, DOM assertions, mutation execution, executable file modes, patch application and the real MCP transport.
 - Typechecking, the browser demonstration, the disk-backed profile example and the code-verification demonstration pass.
 - A fresh tarball installed outside the checkout passes readiness, browser verification over MCP, change analysis, mutation execution over MCP and verification through the CLI. The self-contained plugin builds and reports ready.
 - An independent disk-backed task-board audit passes **11/11 expected outcomes** with the original three-second step timeout and unread fetch bodies. The 0.2 release produced only **7/11** under those conditions. The change uses proxy response completion for settling; an actually unfinished streaming response still abstains.
 - The code demo begins with tests that pass but miss **3/3 deliberate behavioral mutations**. Adding explicit threshold, zero and negative-input assertions detects **3/3**, with repeated mutant failures and passing baselines. Source code remains unchanged by the engine.
+- Review regressions enforce literal URL matching, prevent redaction from creating false exact action matches, keep both decision tiers scrubbed, and reject file/directory source links introduced by setup before mutation execution.
 - Additional cases stop attribution when baselines are unstable, distinguish invalid mutants from detections, constrain command output/time, and verify that session redaction preserves report paths and protocol fields even with short localStorage values.
 
 These are controlled regression checks, not proof of general correctness, autonomous specification discovery or production accuracy. Static test reachability is not measured coverage. The runner executes trusted repository code and is not an OS sandbox. See [code verification limits](code-verification.md#boundaries) and the [remaining roadmap](roadmap.md).
