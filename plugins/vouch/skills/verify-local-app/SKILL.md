@@ -1,6 +1,6 @@
 ---
 name: verify-local-app
-description: Inspect and verify a disposable local web app after code changes, reproduce browser failures, fix their cause, and rerun assertions using the Browser Verify MCP tools.
+description: Inspect and verify a disposable local web app after code changes, reproduce browser failures, fix their cause, and rerun assertions using the Vouch MCP tools.
 ---
 
 Use this when a coding change needs browser workflow verification. Keep the user's intended flow and assertions explicit.

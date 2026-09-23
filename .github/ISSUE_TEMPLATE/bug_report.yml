@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in Browser Verify itself does not work
+description: Something in Vouch itself does not work
 labels: [bug]
 body:
   - type: textarea

@@ -1,6 +1,6 @@
 # Upstream explorer and runner
 
-Preserved from [DowLucas/browser-jev](https://github.com/DowLucas/browser-jev), the MIT-licensed foundation of Browser Verify. These commands use a separate exploration engine with different model defaults and permissions. Commands run from the repository root. The verifier documentation is [here](verification.md).
+Preserved from [DowLucas/browser-jev](https://github.com/DowLucas/browser-jev), the MIT-licensed foundation of Vouch. These commands use a separate exploration engine with different model defaults and permissions. Commands run from the repository root. The verifier documentation is [here](verification.md).
 
 
 Playwright drives the browser; Jev decides where to explore next and whether each page state looks broken.

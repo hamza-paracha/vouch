@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.2.0 — local verification alpha
+## 0.2.0 — Vouch alpha
+
+- Renamed the product, CLI, MCP server and plugin to Vouch.
 
 - Added `inspect_page` and `verify_workflow` MCP tools, plus CLI inspection and readiness checks.
 - Added structured workflows, independent persisted-state assertions, evidence reports and rules-only replay files.

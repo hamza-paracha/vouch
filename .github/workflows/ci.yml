@@ -39,4 +39,4 @@ jobs:
       - run: npm run verify:install
       - run: npm run verify:example
       - run: npm run plugin:build
-      - run: node out/plugin/browser-verify/bin/browser-verify.mjs --doctor
+      - run: node out/plugin/vouch/bin/vouch.mjs --doctor

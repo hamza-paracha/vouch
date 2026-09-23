@@ -22,7 +22,7 @@ const { url } = JSON.parse(chunk.toString());
 const client = new Client({ name: "source-repair-acceptance", version: "1.0.0" });
 // Pass a cached plugin directory to test the installed artifact instead of the checkout.
 const plugin = process.argv[3];
-const binary = plugin ? resolve(plugin, "bin/browser-verify.mjs") : resolve("bin/browser-verify.mjs");
+const binary = plugin ? resolve(plugin, "bin/vouch.mjs") : resolve("bin/vouch.mjs");
 try {
   await client.connect(new StdioClientTransport({ command: process.execPath, args: [binary, "--stdio"],
     env: { ...env, VERIFY_MODEL_MAX_CALLS: "0", VERIFY_OUTPUT_DIR: directory }, stderr: "pipe" }));

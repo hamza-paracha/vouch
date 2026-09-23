@@ -1,5 +1,5 @@
 name: Feature request
-description: An idea for Browser Verify
+description: An idea for Vouch
 labels: [enhancement]
 body:
   - type: textarea

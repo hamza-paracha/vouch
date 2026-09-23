@@ -1,15 +1,15 @@
 {
-  "name": "browser-verify",
+  "name": "vouch",
   "version": "0.2.0",
   "private": true,
   "description": "Evidence-first browser verification for coding agents. Verify local workflows and persisted state through MCP or CLI.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hamza-paracha/browser-verify.git"
+    "url": "git+https://github.com/hamza-paracha/vouch.git"
   },
-  "homepage": "https://github.com/hamza-paracha/browser-verify#readme",
-  "bugs": "https://github.com/hamza-paracha/browser-verify/issues",
+  "homepage": "https://github.com/hamza-paracha/vouch#readme",
+  "bugs": "https://github.com/hamza-paracha/vouch/issues",
   "type": "module",
   "engines": {
     "node": ">=22"
@@ -23,8 +23,8 @@
     "test": "node --import tsx --test test/*.test.ts",
     "runner": "tsx src/runner/server.ts",
     "bench": "tsx --env-file-if-exists=.env scripts/recall-bench.ts",
-    "verify": "node bin/browser-verify.mjs",
-    "verify:mcp": "node bin/browser-verify.mjs --stdio",
+    "verify": "node bin/vouch.mjs",
+    "verify:mcp": "node bin/vouch.mjs --stdio",
     "verify:demo": "tsx scripts/verify-demo.ts",
     "plugin:build": "node scripts/build-plugin.mjs",
     "verify:live": "tsx --env-file-if-exists=.env scripts/verify-live.ts",
@@ -43,7 +43,7 @@
     "typescript": "^7.0.2"
   },
   "bin": {
-    "browser-verify": "bin/browser-verify.mjs"
+    "vouch": "bin/vouch.mjs"
   },
   "files": [
     "bin/",

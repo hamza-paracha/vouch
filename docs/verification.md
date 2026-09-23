@@ -1,6 +1,6 @@
 # Adaptive workflow verification
 
-The new `browser-verify` CLI and `verify_workflow` MCP tool run explicit browser workflows and return evidence to a coding agent. It ships as a CLI, a local MCP server, and a native Codex/Claude Code plugin bundle. Source and alpha releases are available on GitHub; there is no npm registry publication. The upstream explorer and runner remain available.
+The new `vouch` CLI and `verify_workflow` MCP tool run explicit browser workflows and return evidence to a coding agent. It ships as a CLI, a local MCP server, and a native Codex/Claude Code plugin bundle. Source and alpha releases are available on GitHub; there is no npm registry publication. The upstream explorer and runner remain available.
 
 Routing happens **inside this tool**. It does not change Claude Code's or Codex's coding model. Exact control matches and assertions use deterministic code; ambiguous `choose` steps can use Jev when the server operator enables a bounded budget. Uncertain Jev decisions either abstain or escalate once to an explicitly enabled OpenRouter model, within the same budget. Provider failures are not retried or silently escalated.
 
@@ -37,16 +37,16 @@ From this checkout, install dependencies and Chromium first. Then use the absolu
 Codex:
 
 ```sh
-codex mcp add browser-verify -- node /absolute/path/to/browser-verify/bin/browser-verify.mjs --stdio
+codex mcp add vouch -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 ```
 
 Claude Code (run from the application project):
 
 ```sh
-claude mcp add --transport stdio browser-verify -- node /absolute/path/to/browser-verify/bin/browser-verify.mjs --stdio
+claude mcp add --transport stdio vouch -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 ```
 
-Alternatively, `npm link` in this checkout exposes `browser-verify` as a local executable. The package has no npm registry publication; use this checkout or the release tarball. `npm run --silent verify:mcp` is also available, but a direct executable avoids npm startup output on the protocol stream.
+Alternatively, `npm link` in this checkout exposes `vouch` as a local executable. The package has no npm registry publication; use this checkout or the release tarball. `npm run --silent verify:mcp` is also available, but a direct executable avoids npm startup output on the protocol stream.
 
 Both clients document stdio MCP registration: [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) and [Claude Code local MCP servers](https://code.claude.com/docs/en/mcp#option-3-add-a-local-stdio-server). The implementation uses the [MCP TypeScript SDK](https://ts.sdk.modelcontextprotocol.io/server). We test a real SDK client/server handshake, listing, tool execution and cancellation over stdio; Native Codex installation and Claude Code plugin/MCP loading have also been checked manually; see [validation evidence](validation.md).
 
@@ -136,14 +136,14 @@ Tests cover deterministic and adaptive routing, reservation accounting, disabled
 
 ```sh
 npm run plugin:build
-node out/plugin/browser-verify/bin/browser-verify.mjs --doctor
-claude --plugin-dir "$PWD/out/plugin/browser-verify" plugin details browser-verify
-claude --plugin-dir "$PWD/out/plugin/browser-verify" mcp get plugin:browser-verify:browser-verify
+node out/plugin/vouch/bin/vouch.mjs --doctor
+claude --plugin-dir "$PWD/out/plugin/vouch" plugin details vouch
+claude --plugin-dir "$PWD/out/plugin/vouch" mcp get plugin:vouch:vouch
 ```
 
 The build copies only runtime source, manifests, the workflow skill, docs and the locked dependency graph, then installs production dependencies. The result is a self-contained **local, current-platform** bundle. On another OS/architecture, rebuild it there and install that platform's Playwright Chromium. Never copy `.env`, reports or authentication files into a plugin archive.
 
-For Codex, register the generated directory with a local/personal marketplace, then use `codex plugin add browser-verify@<marketplace>`. Start a new Codex task after an install/update to load its tools and skill. See [official plugin packaging](https://developers.openai.com/plugins/build/plugins) and [Claude Code plugin reference](https://code.claude.com/docs/en/plugins-reference).
+For Codex, register the generated directory with a local/personal marketplace, then use `codex plugin add vouch@<marketplace>`. Start a new Codex task after an install/update to load its tools and skill. See [official plugin packaging](https://developers.openai.com/plugins/build/plugins) and [Claude Code plugin reference](https://code.claude.com/docs/en/plugins-reference).
 
 `npm run verify:install` creates a tarball, checks it excludes credentials and development artifacts, installs it in a fresh temporary project, runs readiness checks and verifies a workflow over MCP. It does not publish anything or spend on models. `npm run verify:example` runs the disk-backed profile example against a fresh data file and saves evidence in `out/acceptance/current/`.
 

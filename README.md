@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="docs/assets/browser-verify-hero.png" alt="Browser Verify — Prove the change. Browser workflows. Independent assertions. Evidence." width="100%">
+  <img src="docs/assets/vouch-hero.png" alt="Vouch — Prove the change. Browser workflows. Independent assertions. Evidence." width="100%">
 </p>
 
-<h1 align="center">Browser Verify</h1>
-<p align="center"><strong>Give your coding agent evidence that the change works.</strong></p>
+<h1 align="center">Vouch</h1>
+<p align="center"><strong>Your agent builds. Vouch verifies.</strong></p>
 <p align="center">Run local browser workflows, check application state, and bring actionable evidence back to the agent.</p>
 
 <p align="center">
-  <a href="https://github.com/hamza-paracha/browser-verify/actions/workflows/ci.yml"><img src="https://github.com/hamza-paracha/browser-verify/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml"><img src="https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-d6f675?labelColor=171a16" alt="MIT license"></a>
-  <a href="https://github.com/hamza-paracha/browser-verify/releases"><img src="https://img.shields.io/badge/status-alpha-d6f675?labelColor=171a16" alt="Alpha"></a>
+  <a href="https://github.com/hamza-paracha/vouch/releases"><img src="https://img.shields.io/badge/status-alpha-d6f675?labelColor=171a16" alt="Alpha"></a>
   <img src="https://img.shields.io/badge/models-off_by_default-d6f675?labelColor=171a16" alt="Models off by default">
 </p>
 
@@ -17,7 +17,7 @@
   <a href="#try-it-in-two-minutes">Quickstart</a> ·
   <a href="docs/verification.md">Documentation</a> ·
   <a href="docs/validation.md">Validation</a> ·
-  <a href="https://github.com/hamza-paracha/browser-verify/releases">Releases</a> ·
+  <a href="https://github.com/hamza-paracha/vouch/releases">Releases</a> ·
   <a href="CONTRIBUTING.md">Contribute</a>
 </p>
 
@@ -25,7 +25,7 @@
 
 Your agent edits a form. The browser says **“Saved.”** But did the server persist the change?
 
-Browser Verify runs the interaction and checks the outcome through explicit assertions. A separate read of application state can catch a missing write even when the interface reports success. The agent gets the failing assertion, action history, and a replayable workflow to investigate, fix, and verify again.
+Vouch runs the interaction and checks the outcome through explicit assertions. A separate read of application state can catch a missing write even when the interface reports success. The agent gets the failing assertion, action history, and a replayable workflow to investigate, fix, and verify again.
 
 ```text
 Browser interaction         Independent state check        Result
@@ -39,7 +39,7 @@ This is the regression we reproduced and repaired through the installed MCP runt
 
 ## Where it helps
 
-| When you need to… | Browser Verify provides… |
+| When you need to… | Vouch provides… |
 | --- | --- |
 | Check an agent’s local app change | Real Chromium interactions followed by explicit assertions |
 | Reproduce a misleading success message | A separate same-origin JSON read to check the expected state |
@@ -53,8 +53,8 @@ This is the regression we reproduced and repaired through the installed MCP runt
 Requires **Node.js 22+**, npm, and Playwright Chromium. No API key or model service is needed.
 
 ```sh
-git clone https://github.com/hamza-paracha/browser-verify.git
-cd browser-verify
+git clone https://github.com/hamza-paracha/vouch.git
+cd vouch
 npm ci
 npx playwright install chromium
 npm run verify -- --doctor
@@ -79,15 +79,15 @@ Register the stdio server using the **absolute path** to your checkout:
 
 ```sh
 # Codex
-codex mcp add browser-verify -- node /absolute/path/to/browser-verify/bin/browser-verify.mjs --stdio
+codex mcp add vouch -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 
 # Claude Code — run from your application project
-claude mcp add --transport stdio browser-verify -- node /absolute/path/to/browser-verify/bin/browser-verify.mjs --stdio
+claude mcp add --transport stdio vouch -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 ```
 
 Start a new task/session, then ask:
 
-> Use Browser Verify to inspect my disposable local app at http://127.0.0.1:3000. Verify the profile-saving flow, including the persisted display name through the app’s read endpoint. Read the evidence, fix any reproduced failure, and rerun the same assertions. Keep paid models disabled.
+> Use Vouch to inspect my disposable local app at http://127.0.0.1:3000. Verify the profile-saving flow, including the persisted display name through the app’s read endpoint. Read the evidence, fix any reproduced failure, and rerun the same assertions. Keep paid models disabled.
 
 | Tool | Purpose |
 | --- | --- |
@@ -174,6 +174,6 @@ CI runs without provider credentials. See [CONTRIBUTING.md](CONTRIBUTING.md), [S
 
 ## Built on open source
 
-Browser Verify builds on Lucas Dow’s [browser-jev](https://github.com/DowLucas/browser-jev), with its original explorer and runner preserved. Their commands and model defaults are documented separately in the [upstream explorer guide](docs/upstream-explorer.md). Verification uses [Playwright](https://playwright.dev/), [MCP](https://modelcontextprotocol.io/), and optional [Jev](https://docs.typesafe.ai/).
+Vouch builds on Lucas Dow’s [browser-jev](https://github.com/DowLucas/browser-jev), with its original explorer and runner preserved. Their commands and model defaults are documented separately in the [upstream explorer guide](docs/upstream-explorer.md). Verification uses [Playwright](https://playwright.dev/), [MCP](https://modelcontextprotocol.io/), and optional [Jev](https://docs.typesafe.ai/).
 
 [MIT licensed](LICENSE). Original copyright and attribution are retained. Codex and Claude Code are supported integrations; this project is independently maintained.

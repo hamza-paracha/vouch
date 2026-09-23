@@ -31,7 +31,7 @@ No model calls were needed for this repair verification. This was a seeded defec
 
 - TypeScript typecheck and **114 tests passed**, covering the upstream explorer plus the new verifier.
 - Fresh npm tarball installed into a separate temporary project; CLI readiness and real MCP workflow execution passed without relying on the checkout's dependencies.
-- Native plugin manifest and skill validators passed. Codex installed `browser-verify@personal`; its cached executable ran successfully.
+- Native plugin manifest and skill validators passed. Before the Vouch rename, Codex installed `browser-verify@personal`; its cached executable ran successfully.
 - Claude Code recognized one skill and one bundled MCP server; `claude ... mcp get plugin:browser-verify:browser-verify` reported **Connected**.
 - Network tests cover cross-origin redirect blocking, normal same-origin redirects, POST method preservation, 303 conversion to GET, write-path restrictions and cookie continuity.
 - Budget tests cover reservations shared between independent processes' budget instances, persistence across restarts, lock contention, corruption, cancellation and exhausted limits. Uncertain attempts are never refunded automatically.
@@ -48,4 +48,4 @@ The Jev threshold remains uncalibrated on this workload. A representative held-o
 
 The launch candidate was rechecked on Node.js 22.22.0 with models disabled: all 114 tests, typechecking, the paired demo, fresh tarball installation and MCP execution, the disk-backed example, plugin build and readiness check passed. The JSON workflow printed in the README was also extracted and run unchanged against the example app; it passed and the independent file read returned `Ada Lovelace`.
 
-The example acceptance script now asserts that any successful MCP result also matches the independently read disk value. Public CI repeats typechecking, the full suite, both demos, package installation and plugin readiness on Linux with Node.js 22 and 24. The repository’s [Actions page](https://github.com/hamza-paracha/browser-verify/actions/workflows/ci.yml) is the source for current CI status.
+The example acceptance script now asserts that any successful MCP result also matches the independently read disk value. Public CI repeats typechecking, the full suite, both demos, package installation and plugin readiness on Linux with Node.js 22 and 24. The repository’s [Actions page](https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml) is the source for current CI status.

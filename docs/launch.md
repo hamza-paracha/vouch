@@ -1,10 +1,10 @@
-# Browser Verify · v0.2.0 alpha
+# Vouch · v0.2.0 alpha
 
 ## Release introduction
 
 A browser can say “Saved” while the application stores nothing.
 
-Browser Verify gives coding agents a way to check the outcome: run the browser workflow, assert the visible result, read the application state independently, and return evidence the agent can use to fix the source.
+Vouch gives coding agents a way to check the outcome: run the browser workflow, assert the visible result, read the application state independently, and return evidence the agent can use to fix the source.
 
 It runs through MCP or a CLI, with local plugin bundles for Codex and Claude Code. Exact matches and assertions need no model. Optional Jev routing can resolve ambiguous controls, with explicit call limits and persistent reservations.
 
@@ -13,8 +13,8 @@ The first alpha includes accessible-control discovery, state assertions, structu
 Try the free demonstration:
 
 ```sh
-git clone https://github.com/hamza-paracha/browser-verify.git
-cd browser-verify
+git clone https://github.com/hamza-paracha/vouch.git
+cd vouch
 npm ci
 npx playwright install chromium
 npm run verify:demo
@@ -26,12 +26,12 @@ This is a local HTTP verification alpha. OpenRouter routing is mock-tested only;
 
 ## Short announcement
 
-Browser Verify is open source: browser verification for coding agents, with independent state assertions and replayable evidence.
+Vouch is open source: browser verification for coding agents, with independent state assertions and replayable evidence.
 
 The demo catches a form that says “Saved” without saving, then verifies the working version. No API key required. MCP + CLI. Local Codex and Claude Code plugins. MIT licensed.
 
-Try it: https://github.com/hamza-paracha/browser-verify
+Try it: https://github.com/hamza-paracha/vouch
 
 ## Artwork
 
-Use [the launch banner](assets/browser-verify-hero.png). It is conceptual artwork, not a screenshot. The [generation prompt](assets/README.md) is included.
+Use [the launch banner](assets/vouch-hero.png). It is conceptual artwork, not a screenshot. The [generation prompt](assets/README.md) is included.

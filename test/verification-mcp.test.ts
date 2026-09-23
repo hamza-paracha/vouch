@@ -13,7 +13,7 @@ it("real stdio MCP handshake, schema validation, workflow, and single-run concur
   const fixture = await startVerificationFixture();
   const client = new Client({ name: "verification-test", version: "1.0.0" });
   const transport = new StdioClientTransport({
-    command: process.execPath, args: [resolve("bin/browser-verify.mjs"), "--stdio"],
+    command: process.execPath, args: [resolve("bin/vouch.mjs"), "--stdio"],
     // Explicitly disable any inherited provider config. Tests never need a key.
     env: { PATH: process.env.PATH ?? "", HOME: process.env.HOME ?? "", VERIFY_OUTPUT_DIR: output, VERIFY_JEV_MAX_CALLS: "0" },
     stderr: "pipe",

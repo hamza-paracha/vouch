@@ -7,7 +7,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { startVerificationFixture } from "../test/helpers/verification-fixture.ts";
 
-const directory = await mkdtemp(join(tmpdir(), "browser-verify-install-"));
+const directory = await mkdtemp(join(tmpdir(), "vouch-install-"));
 const fixture = await startVerificationFixture();
 const client = new Client({ name: "fresh-install-test", version: "1.0.0" });
 try {
@@ -17,7 +17,7 @@ try {
   const consumer = join(directory, "consumer");
   await mkdir(consumer);
   execFileSync("npm", ["install", "--prefix", consumer, "--ignore-scripts", "--no-audit", "--no-fund", join(directory, packed.filename)], { stdio: "pipe" });
-  const binary = join(consumer, "node_modules/browser-verify/bin/browser-verify.mjs");
+  const binary = join(consumer, "node_modules/vouch/bin/vouch.mjs");
   const environment = { PATH: process.env.PATH ?? "", HOME: process.env.HOME ?? "", VERIFY_MODEL_MAX_CALLS: "0", VERIFY_OUTPUT_DIR: join(directory, "reports") };
   const readiness = JSON.parse(execFileSync(process.execPath, [binary, "--doctor"], { cwd: consumer, env: environment, encoding: "utf8" }));
   assert.equal(readiness.status, "ready");
