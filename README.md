@@ -4,7 +4,7 @@
 
 <h1 align="center">Vouch</h1>
 <p align="center"><strong>Your agent builds. Vouch verifies.</strong></p>
-<p align="center">Run local browser workflows, check application state, and bring actionable evidence back to the agent.</p>
+<p align="center">Inspect the diff. Challenge the tests. Verify the browser flow. Bring evidence back to your coding agent.</p>
 
 <p align="center">
   <a href="https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml"><img src="https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -37,20 +37,35 @@ Fill name → Save → “Saved”   GET profile → “Ada Lovelace”    PASS
 
 This is the regression we reproduced and repaired through the installed MCP runtime. [Read the measured evidence →](docs/validation.md#source-level-reproduce--fix--verify)
 
+## Challenge the tests behind the change
+
+A green test suite can still miss the bug. Vouch now reads your Git diff, identifies changed JavaScript/TypeScript functions and affected tests, then introduces small deliberate faults in disposable copies: an off-by-one boundary, a missing validation guard, a reversed condition.
+
+If the tests still pass, Vouch returns the exact surviving patch and a focused regression-test suggestion. Baselines run twice, failing mutants are repeated, and the original checkout stays untouched by the mutation engine. No model API call is required.
+
+```sh
+npm run verify:change-demo
+```
+
+The demo starts with passing but weak tests, finds surviving mutations, adds explicit boundary/error assertions, and verifies that those tests now detect the same mutations. It demonstrates test sensitivity, not automatic proof of correctness.
+
+Use `vouch analyze --project /path/to/repo --base HEAD` for read-only analysis. Execution requires a project configuration and `--allow-exec`. [Code-aware verification →](docs/code-verification.md) · [Implementation roadmap →](docs/roadmap.md)
+
 ## Where it helps
 
 | When you need to… | Vouch provides… |
 | --- | --- |
+| Find tests that miss a changed behavior | Diff-aware mutation runs with exact surviving patches |
 | Check an agent’s local app change | Real Chromium interactions followed by explicit assertions |
 | Reproduce a misleading success message | A separate same-origin JSON read to check the expected state |
 | Give an agent enough context to fix a failure | Structured reports, failing observations, action records, and a replay file |
-| Connect verification to your coding workflow | Two MCP tools, a CLI, and local plugin bundles for Codex and Claude Code |
+| Connect verification to your coding workflow | Four MCP tools, a CLI, and local plugin bundles for Codex and Claude Code |
 | Handle a control label that differs from the intent | Optional Jev selection, with an explicitly enabled stronger-model fallback |
 | Keep routine verification predictable | Models off by default, origin/write restrictions, deadlines, and persistent paid-call limits |
 
 ## Try it in two minutes
 
-Requires **Node.js 22+**, npm, and Playwright Chromium. No API key or model service is needed.
+Requires **Node.js 22+**, npm, Git for code analysis, and Playwright Chromium for browser workflows. No API key or model service is needed.
 
 ```sh
 git clone https://github.com/hamza-paracha/vouch.git
@@ -91,6 +106,8 @@ Start a new task/session, then ask:
 
 | Tool | Purpose |
 | --- | --- |
+| `analyze_change` | Inspect the configured repository diff, affected tests and mutation candidates |
+| `verify_change` | Execute configured tests and challenge them with bounded mutations in disposable copies |
 | `inspect_page` | Discover accessible controls without allowing HTTP writes or calling models |
 | `verify_workflow` | Run a bounded workflow and return status, assertions, routing, and evidence paths |
 
@@ -140,7 +157,7 @@ flowchart LR
 
 Models can propose a control; they do not decide whether an assertion passed. Paid routing requires both an adaptive workflow and operator-configured limits. Reservations are persisted before calls, shared across the two model tiers, and retained after timeouts or failures. A configured dollar reservation is an estimate, not a guaranteed provider billing cap. [Routing and spending details →](docs/verification.md#routing-and-spending)
 
-Each run saves three local artifacts:
+Each browser run saves three local artifacts:
 
 | Artifact | What you get |
 | --- | --- |
@@ -152,20 +169,22 @@ The CLI exits `0` on a pass, `1` on a non-passing run, and `2` on invalid input 
 
 ## Tested, with clear boundaries
 
-**This is an alpha for controlled local HTTP applications.** It supports literal loopback addresses with an explicit port, exact-origin requests, and explicitly allowed write paths. Use disposable data and a production preview for apps whose development servers require HMR sockets.
+**This is an alpha for controlled local HTTP(S) applications and trusted JavaScript/TypeScript repositories.** It supports literal loopback addresses with an explicit port, exact-origin requests, and explicitly allowed write paths. Use disposable data and a production preview for apps whose development servers require HMR sockets.
 
+- **Code verification:** the controlled demo exposes three surviving mutations, then detects all three after targeted boundary and error assertions are added.
 - **Automated:** routing, assertions, network/write restrictions, redirects, cancellation, persistent budgets, redaction, and real MCP transport; plus clean-package installation checks.
 - **Live Jev smoke:** three requests covering semantic selection, a false-success regression, and abstention. This establishes those cases, not general accuracy.
 - **Actual repair:** reproduced a missing persistence write through the installed runtime, fixed the source, and confirmed the result with an independent disk read.
 - **Clients:** Codex plugin installation and Claude Code plugin/MCP loading checked locally.
 
-HTTPS, remote targets, imported login sessions, WebSocket-dependent flows, popups, and visual assertions are not supported. OpenRouter escalation is tested with simulated responses only. A passing workflow covers its explicit assertions and observed browser checks; it does not certify an entire application. [Full results and limitations →](docs/validation.md)
+HTTPS and named cookie/localStorage sessions are supported. Remote targets, cross-origin login flows, WebSocket-dependent flows, popups, and visual assertions remain unsupported. OpenRouter escalation is tested with simulated responses only. A passing workflow covers its explicit assertions and observed browser checks; it does not certify an entire application. [Full results and limitations →](docs/validation.md)
 
 ## Development
 
 ```sh
 npm run typecheck
 npm test
+npm run verify:change-demo
 npm run verify:install
 npm run verify:example
 ```

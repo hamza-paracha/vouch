@@ -105,7 +105,7 @@ export class Settler {
     await context.addInitScript({ content: MUTATION_CLOCK });
   }
 
-  constructor(private readonly page: Page) {
+  constructor(private readonly page: Page, private readonly transport?: { networkQuietFor: () => number }) {
     const touch = () => {
       this.#lastNetworkActivity = Date.now();
     };
@@ -152,7 +152,7 @@ export class Settler {
       if (entry.fromAction) pendingRequest ??= `${req.method()} ${shortUrl(req.url())} open ${Math.round(age / 1000)}s`;
       else if (age > LONG_LIVED_MS) this.#inflight.delete(req);
     }
-    return { quietFor: this.#inflight.size ? 0 : now - this.#lastNetworkActivity, pendingRequest };
+    return { quietFor: this.transport ? this.transport.networkQuietFor() : this.#inflight.size ? 0 : now - this.#lastNetworkActivity, pendingRequest };
   }
 
   async wait(page: Page, { quietMs, timeoutMs, maxWaitMs = timeoutMs }: SettleOptions): Promise<SettleResult> {

@@ -1,4 +1,21 @@
-# Version 0.2 validation
+# Validation evidence
+
+## Version 0.3 candidate
+
+The local 0.3 candidate adds code-aware verification alongside the browser workflow engine. No paid model calls were made for these checks.
+
+- **129 automated tests pass**, including the existing explorer, browser verifier, TLS redirects/cookies, named sessions, DOM assertions, mutation execution, executable file modes, patch application and the real MCP transport.
+- Typechecking, the browser demonstration, the disk-backed profile example and the code-verification demonstration pass.
+- A fresh tarball installed outside the checkout passes readiness, browser verification over MCP, change analysis, mutation execution over MCP and verification through the CLI. The self-contained plugin builds and reports ready.
+- An independent disk-backed task-board audit passes **11/11 expected outcomes** with the original three-second step timeout and unread fetch bodies. The 0.2 release produced only **7/11** under those conditions. The change uses proxy response completion for settling; an actually unfinished streaming response still abstains.
+- The code demo begins with tests that pass but miss **3/3 deliberate behavioral mutations**. Adding explicit threshold, zero and negative-input assertions detects **3/3**, with repeated mutant failures and passing baselines. Source code remains unchanged by the engine.
+- Additional cases stop attribution when baselines are unstable, distinguish invalid mutants from detections, constrain command output/time, and verify that session redaction preserves report paths and protocol fields even with short localStorage values.
+
+These are controlled regression checks, not proof of general correctness, autonomous specification discovery or production accuracy. Static test reachability is not measured coverage. The runner executes trusted repository code and is not an OS sandbox. See [code verification limits](code-verification.md#boundaries) and the [remaining roadmap](roadmap.md).
+
+Reproduce with `npm test`, `npm run verify:change-demo`, `npm run verify:demo`, `npm run verify:install`, and `npm run verify:example`. Local audit evidence is retained under `out/candidate-audit/`; demo reports are under `out/change-demo/`. Those generated directories are excluded from distribution. The independent audit is summarized in [validation-0.3.json](validation-0.3.json).
+
+## Historical version 0.2 validation
 
 Measured during local development on September 22, 2026 (America/Toronto; UTC records are September 23). Machine-readable results are in [validation.json](validation.json). This is a tested local alpha; these measurements do not establish production accuracy or cost savings.
 
@@ -38,7 +55,7 @@ No model calls were needed for this repair verification. This was a seeded defec
 - The optional stronger-model path was tested with simulated API responses: escalation after Jev uncertainty, exact model selection, no provider fallback/retries, malformed JSON, refusals, truncated/oversized responses and budget exhaustion. A deliberately wrong stronger-model selection still failed its independent browser assertion.
 - Tests cover read-only inspection, automatic control discovery, bounded/cancellable state responses, structured evidence and credential redaction without corrupting JSON.
 
-## Remaining release boundaries
+## Historical 0.2 release boundaries
 
 Only controlled local HTTP apps are supported. HTTPS, authenticated-session import, WebSocket-dependent workflows, remote/staging targets and visual assertions are not covered. Use a production preview for development frameworks requiring HMR sockets.
 

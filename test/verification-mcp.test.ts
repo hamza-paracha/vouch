@@ -23,7 +23,7 @@ it("real stdio MCP handshake, schema validation, workflow, and single-run concur
   try {
     await client.connect(transport);
     const listed = await client.listTools();
-    assert.deepEqual(listed.tools.map((t) => t.name), ["inspect_page", "verify_workflow"]);
+    assert.deepEqual(listed.tools.map((t) => t.name), ["inspect_page", "verify_workflow", "analyze_change", "verify_change"]);
     const inspected = await client.callTool({ name: "inspect_page", arguments: { url: fixture.origin } });
     assert.equal(inspected.isError, false);
     assert.ok(JSON.stringify(inspected.structuredContent).includes("Save changes"));

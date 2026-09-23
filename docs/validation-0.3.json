@@ -1,0 +1,125 @@
+{
+  "version": "0.3.0-candidate",
+  "recordedAt": "2026-09-23T02:57:09.051539+00:00",
+  "automated": {
+    "tests": 129,
+    "passed": 129,
+    "typecheck": "passed",
+    "typescriptCompiler": "7.0.2",
+    "browserDemo": "passed",
+    "diskBackedExample": "passed",
+    "freshInstall": {
+      "doctor": "ready",
+      "browserMcp": "passed",
+      "changeMcp": "gaps_found",
+      "changeCli": "evidence_collected"
+    },
+    "pluginBuild": "passed"
+  },
+  "independentTaskBoardAudit": {
+    "testedAt": "2026-09-23T02:56:28.268Z",
+    "artifactSha256": "1a72b3dceaada07342b337c1fe10f5a068738603ca2b94ab55f431d451135b4b",
+    "installedOutsideCheckout": true,
+    "stepTimeoutMs": 3000,
+    "unreadFetchBodies": true,
+    "total": 11,
+    "passed": 11,
+    "previousRelease": {
+      "version": "0.2.0",
+      "total": 11,
+      "passed": 7
+    },
+    "cases": [
+      {
+        "name": "MCP handshake + read-only discovery",
+        "matchedExpectedOutcome": true
+      },
+      {
+        "name": "Healthy create: browser + independent disk read",
+        "matchedExpectedOutcome": true,
+        "status": "passed"
+      },
+      {
+        "name": "False success toast: missing write detected",
+        "matchedExpectedOutcome": true,
+        "status": "failed"
+      },
+      {
+        "name": "Wrong-record update: failure detected despite success message",
+        "matchedExpectedOutcome": true,
+        "status": "failed"
+      },
+      {
+        "name": "Write protection: unapproved POST never persists",
+        "matchedExpectedOutcome": true,
+        "status": "abstained"
+      },
+      {
+        "name": "Off-origin redirect: destination gets zero requests",
+        "matchedExpectedOutcome": true,
+        "status": "abstained"
+      },
+      {
+        "name": "Duplicate accessible label: refuses to guess",
+        "matchedExpectedOutcome": true,
+        "status": "abstained"
+      },
+      {
+        "name": "CLI frozen replay: fresh state reproduces successful result",
+        "matchedExpectedOutcome": true,
+        "status": "passed"
+      },
+      {
+        "name": "CLI detects false-success and exits nonzero",
+        "matchedExpectedOutcome": true,
+        "status": "failed"
+      },
+      {
+        "name": "CLI rejects invalid workflow before browser work",
+        "matchedExpectedOutcome": true
+      },
+      {
+        "name": "Hanging app: bounded timeout and retained evidence",
+        "matchedExpectedOutcome": true,
+        "status": "timed_out"
+      }
+    ]
+  },
+  "mutationDemo": {
+    "weakTests": {
+      "status": "gaps_found",
+      "summary": {
+        "candidates": 3,
+        "scheduled": 3,
+        "tested": 3,
+        "detected": 0,
+        "survived": 3,
+        "invalid": 0,
+        "inconclusive": 0,
+        "untested": 0
+      }
+    },
+    "strengthenedTests": {
+      "status": "evidence_collected",
+      "summary": {
+        "candidates": 3,
+        "scheduled": 3,
+        "tested": 3,
+        "detected": 3,
+        "survived": 0,
+        "invalid": 0,
+        "inconclusive": 0,
+        "untested": 0
+      }
+    }
+  },
+  "checkoutUnchangedByMutationEngine": true,
+  "modelCalls": 0,
+  "limits": [
+    "Controlled regression checks, not a general accuracy benchmark.",
+    "Static import reachability is not runtime coverage.",
+    "Only bounded sampled mutations are challenged.",
+    "Execution is trusted repository code, not an OS sandbox.",
+    "Browser targets remain exact-origin local HTTP(S); no WebSocket or remote login support."
+  ]
+}

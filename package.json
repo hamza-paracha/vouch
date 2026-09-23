@@ -1,8 +1,8 @@
 {
   "name": "vouch",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Evidence-first browser verification for coding agents. Verify local workflows and persisted state through MCP or CLI.",
+  "description": "Verify browser workflows and challenge tests around code changes. Local evidence for coding agents through MCP and CLI.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
     "demo:server": "node demo/server.mjs",
     "auth:save": "tsx scripts/save-auth.ts",
     "jev:check": "tsx --env-file-if-exists=.env scripts/jev-check.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "test": "node --import tsx --test test/*.test.ts",
     "runner": "tsx src/runner/server.ts",
     "bench": "tsx --env-file-if-exists=.env scripts/recall-bench.ts",
@@ -29,13 +29,16 @@
     "plugin:build": "node scripts/build-plugin.mjs",
     "verify:live": "tsx --env-file-if-exists=.env scripts/verify-live.ts",
     "verify:install": "tsx scripts/verify-install.ts",
-    "verify:example": "tsx scripts/verify-example.ts"
+    "verify:example": "tsx scripts/verify-example.ts",
+    "verify:change-demo": "tsx scripts/verify-change-demo.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@typesafe-ai/sdk": "^0.6.0",
     "playwright": "^1.63.0",
+    "selfsigned": "5.5.0",
     "tsx": "^4.23.13",
+    "typescript-ast": "npm:typescript@5.9.3",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -57,7 +60,9 @@
     "README.md",
     "examples/profile-app/",
     "scripts/verify-example.ts",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "scripts/verify-change-demo.ts",
+    "test/helpers/change-fixture.ts"
   ],
   "keywords": [
     "browser-testing",
@@ -66,6 +71,8 @@
     "coding-agents",
     "verification",
     "codex",
-    "claude-code"
+    "claude-code",
+    "mutation-testing",
+    "change-impact-analysis"
   ]
 }

@@ -1,13 +1,14 @@
+import { assertJson, assertDOM } from "./assertions.ts";
+import { loadSession } from "./sessions.ts";
 import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
-import { setTimeout as delay } from "node:timers/promises";
 import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
 import { freeOracle, SignalCollector } from "../signals.ts";
 import { Settler } from "../settle.ts";
 import { createOriginProxy } from "./network.ts";
 import { discoverTargets, secretControl } from "./discovery.ts";
-import { redact } from "./redact.ts";
+import { redact, redactBrowserEvidence } from "./redact.ts";
 import { VERSION, runtimeFingerprint } from "./version.ts";
 import { localTarget, sameOrigin, verifyInputSchema, type Target, type Step, type VerifyInput } from "./schema.ts";
 import { ModelBudget, selectControl, VerificationStop, type CallRecord, type DecisionAdapter } from "./routing.ts";
@@ -46,6 +47,8 @@ export interface VerifyOptions {
   strongerAdapter?: DecisionAdapter;
   budget?: ModelBudget;
   signal?: AbortSignal;
+  sessionDir?: string;
+  tlsCA?: string;
 }
 
 function errorMessage(error: unknown): string {
@@ -66,43 +69,13 @@ async function locate(page: Page, target: Target, timeout: number) {
   return locator;
 }
 
-async function assertJson(context: BrowserContext, step: Extract<Step, { kind: "assertJson" }>, origin: string, timeout: number, signal: AbortSignal) {
-  const deadline = Date.now() + timeout;
-  let actual: unknown;
-  do {
-    signal.throwIfAborted();
-    const url = pathUrl(step.path, origin);
-    const cookies = (await context.cookies(url)).map((c) => `${c.name}=${c.value}`).join("; ");
-    // Independent bounded GET. Playwright's API context tunnels even HTTP through CONNECT,
-    // which would weaken the proxy's method/path policy if allowed.
-    const response = await fetch(url, { redirect: "manual", headers: { cookie: cookies, "cache-control": "no-cache" },
-      signal: AbortSignal.any([signal, AbortSignal.timeout(Math.max(1, deadline - Date.now()))]) });
-    try {
-      if (!response.ok) throw new VerificationStop("failed", `State check returned HTTP ${response.status} (redirects are not followed)`);
-      const chunks: Uint8Array[] = [];
-      let size = 0;
-      if (response.body) for await (const chunk of response.body) {
-        size += chunk.length;
-        if (size > 1_000_000) throw new VerificationStop("error", "State check response exceeded 1 MB");
-        chunks.push(chunk);
-      }
-      actual = JSON.parse(Buffer.concat(chunks).toString());
-      for (const key of step.field) {
-        actual = actual !== null && typeof actual === "object" && Object.hasOwn(actual, key) ? (actual as Record<string, unknown>)[key] : undefined;
-      }
-      if (Object.is(actual, step.equals)) return;
-    } finally { await response.body?.cancel().catch(() => {}); }
-    if (Date.now() < deadline) await delay(Math.min(100, deadline - Date.now()), undefined, { signal });
-  } while (Date.now() < deadline);
-  throw new VerificationStop("failed", `Persisted-state assertion failed at ${step.field.join(".") || "<root>"}: expected ${JSON.stringify(step.equals)}, received ${JSON.stringify(actual)?.slice(0, 300) ?? "missing"}`);
-}
-
 /** An isolated browser per run; application state still belongs to the target fixture/server. */
 export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}): Promise<VerificationReport> {
   const input = verifyInputSchema.parse(raw);
   const target = localTarget(input.url);
   // Validate all URLs before any browser work or writes occur.
   for (const step of input.steps) if ("path" in step) pathUrl(step.path, target.origin);
+  const session = await loadSession(input.session, target.origin, options.sessionDir);
   const budget = options.budget ?? new ModelBudget();
   const started = Date.now();
   const runId = `verify-${randomUUID()}`;
@@ -146,11 +119,11 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
     const blocked = (method: string, url: string, reason: string) => {
       if (report.blockedRequests.length < 50) report.blockedRequests.push({ method, url, reason });
     };
-    proxy = await createOriginProxy({ origin: target.origin, allowedWritePaths: input.allowedWritePaths,
+    proxy = await createOriginProxy({ origin: target.origin, allowedWritePaths: input.allowedWritePaths, allowInsecureTLS: input.allowInsecureTLS, tlsCA: options.tlsCA,
       onBlocked: ({ method, url, reason }) => blocked(method, url, reason) });
     browser = await chromium.launch({ timeout: input.timeoutMs, proxy: { server: proxy.server, bypass: proxy.bypass } });
     controller.signal.throwIfAborted();
-    context = await browser.newContext({ serviceWorkers: "block", acceptDownloads: false });
+    context = await browser.newContext({ serviceWorkers: "block", acceptDownloads: false, ignoreHTTPSErrors: proxy.browserTLS, storageState: session.state });
     context.setDefaultTimeout(input.stepTimeoutMs);
     await Settler.install(context);
     await context.routeWebSocket(/.*/, async (ws) => {
@@ -159,7 +132,7 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
     });
     page = await context.newPage();
     collector.attach(page);
-    const settler = new Settler(page);
+    const settler = new Settler(page, proxy);
     const settle = async () => {
       const result = await settler.wait(page!, { quietMs: 100, timeoutMs: timeout() });
       if (!result.settled) throw new VerificationStop("abstained", "Page did not settle within the step deadline");
@@ -204,7 +177,7 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
           }
           if (!candidates.length) throw new VerificationStop("abstained", "No unique visible allowed candidates were available");
           const selected = await selectControl({
-            intent: step.intent, candidates, policy: input.policy, adapter: options.adapter, strongerAdapter: options.strongerAdapter,
+            intent: redact(step.intent, session.secrets), candidates: redactBrowserEvidence(candidates, session.secrets), policy: input.policy, adapter: options.adapter, strongerAdapter: options.strongerAdapter,
             budget, calls: report.calls, step: index, signal: controller.signal,
           });
           active.route = selected.route;
@@ -216,8 +189,15 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
         case "assertText":
           await page.getByText(step.text, { exact: true }).waitFor({ state: "visible", timeout: timeout() });
           break;
+        case "assertUrl":
+          await page.waitForURL(pathUrl(step.path, target.origin), { timeout: timeout() });
+          break;
+        case "assertSelector":
+        case "assertAttribute":
+          await assertDOM(page, step, timeout(), controller.signal);
+          break;
         case "assertJson":
-          await assertJson(context, step, target.origin, timeout(), controller.signal);
+          await assertJson(context, step, pathUrl(step.path, target.origin), timeout(), controller.signal, { allowInsecureTLS: input.allowInsecureTLS, tlsCA: options.tlsCA });
           break;
       }
       await settle();
@@ -272,7 +252,7 @@ export async function verifyWorkflow(raw: unknown, options: VerifyOptions = {}):
     outputTokens: unknownUsage ? null : report.calls.reduce((sum, c) => sum + (c.decision?.outputTokens ?? 0), 0),
     processCallsUsed: budget.usedCalls,
   };
-  const safe = redact(report);
+  const safe = redactBrowserEvidence(report, session.secrets);
   const replay = { ...safe.input, policy: "rules", steps: safe.steps.map((s) => s.selectedTarget ? { kind: "click", target: s.selectedTarget } : s.action) };
   // Include steps after an early failure; freeze completed model decisions for a free replay.
   replay.steps.push(...safe.input.steps.slice(safe.steps.length));
