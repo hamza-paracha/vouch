@@ -1,12 +1,12 @@
-# vouch-jev Guard: structured code review
+# proof-jev Guard: structured code review
 
-vouch-jev Guard reviews a Git diff using Jev's `noul`, `choice` and `score` primitives. Each changed file gets one model request containing eight questions: breaking behavior, risk, change type, missing tests, error handling, input validation, side effects and merge readiness. A PR assessment adds four questions about scope, splitting, security relevance and urgency.
+proof-jev Guard reviews a Git diff using Jev's `noul`, `choice` and `score` primitives. Each changed file gets one model request containing eight questions: breaking behavior, risk, change type, missing tests, error handling, input validation, side effects and merge readiness. A PR assessment adds four questions about scope, splitting, security relevance and urgency.
 
-This is an advisory review layer. It does not run project code, execute browser workflows or merge changes. The full vouch-jev package also provides browser and mutation verification; the standalone Guard package runs without Playwright, Chromium or the AST parser.
+This is an advisory review layer. It does not run project code, execute browser workflows or merge changes. The full proof-jev package also provides browser and mutation verification; the standalone Guard package runs without Playwright, Chromium or the AST parser.
 
 ## Install and connect
 
-From the vouch-jev source checkout:
+From the proof-jev source checkout:
 
 ```sh
 npm ci
@@ -38,11 +38,11 @@ Reservations persist across calls and server restarts. The example permits at mo
 Register the review-only MCP server:
 
 ```sh
-codex mcp add vouch-jev-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
-claude mcp add --transport stdio vouch-jev-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
+codex mcp add proof-jev-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
+claude mcp add --transport stdio proof-jev-guard -- node /absolute/path/to/vouch/bin/guard.mjs --stdio
 ```
 
-Make the environment above available to the registered server, using your client's MCP environment configuration or the launching environment. Restart the client task/session after changing its configuration. The full `bin/vouch.mjs --stdio` server exposes these same three tools alongside vouch-jev's four existing tools.
+Make the environment above available to the registered server, using your client's MCP environment configuration or the launching environment. Restart the client task/session after changing its configuration. The full `bin/vouch.mjs --stdio` server exposes these same three tools alongside proof-jev's four existing tools.
 
 ## Tools and CLI
 
@@ -60,11 +60,11 @@ node bin/guard.mjs assess-pr --project /path/to/repo --base main --title 'Inclus
 node bin/guard.mjs check-file --project /path/to/repo --file src/pricing.ts --base HEAD
 ```
 
-The full vouch-jev CLI supports the same commands. `--focus path` can be repeated with `review`. Exit codes are `0` clean, `1` attention/high risk, and `2` error, cancellation or exhausted budget. A no-change result explicitly says that no model review was performed.
+The full proof-jev CLI supports the same commands. `--focus path` can be repeated with `review`. Exit codes are `0` clean, `1` attention/high risk, and `2` error, cancellation or exhausted budget. A no-change result explicitly says that no model review was performed.
 
 Ask your coding agent:
 
-> Review my diff with review_change. Investigate flags against the source and requirements, report uncertain judgments, and use the existing tests and vouch-jev's browser/mutation tools to validate fixes. A model's merge-readiness answer is not permission to merge.
+> Review my diff with review_change. Investigate flags against the source and requirements, report uncertain judgments, and use the existing tests and proof-jev's browser/mutation tools to validate fixes. A model's merge-readiness answer is not permission to merge.
 
 ## Verdicts and confidence
 
@@ -91,6 +91,8 @@ Example verdict shape (illustrative values):
   "probabilities": {"yes": 0.94, "no": 0.06}
 }
 ```
+
+Each file report includes `evidence` with its diff hash and exact added/deleted line ranges per hunk. Added ranges refer to the working file; deleted ranges refer to the recorded base commit (and `previousFile` for renames). Markdown shows changed lines beside the verdicts. These are file-level review locations, not claims that Jev diagnosed a particular line. They remain available for failed or budget-limited reviews.
 
 Each run retains owner-only `report.json` and `report.md` files. Reports include the base commit, diff fingerprint, file coverage, skipped paths, latency, complete verdicts and distributions, token usage, estimated price and reservations. Provider-reported billing is unknown. Lost or invalid responses leave usage/cost unknown rather than assuming zero.
 

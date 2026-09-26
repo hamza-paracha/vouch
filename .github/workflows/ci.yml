@@ -35,6 +35,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run typecheck
       - run: npm test
+      - run: npm run review:eval -- --responses evals/review/recorded-jev-1.13.0.json
       - run: npm run verify:change-demo
       - run: npm run verify:demo
       - run: npm run verify:install
@@ -42,4 +43,4 @@ jobs:
       - run: npm run review:build
       - run: npm run verify:review-install
       - run: npm run plugin:build
-      - run: node out/plugin/vouch-jev/bin/vouch.mjs --doctor
+      - run: node out/plugin/proof-jev/bin/vouch.mjs --doctor

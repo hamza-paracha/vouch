@@ -1,8 +1,8 @@
-# vouch-jev · Jev-powered code review and verification
+# proof-jev · Jev-powered code review and verification
 
 ## Release introduction
 
-Your coding agent makes the change. vouch-jev uses Jev to review it and returns evidence to help the agent verify the result.
+Your coding agent makes the change. proof-jev uses Jev to review it and returns evidence to help the agent verify the result.
 
 Jev reviews each changed file for breaking behavior, risk, missing tests, error handling, input validation, side effects and merge readiness. The report keeps probabilities and uncertainty visible. Mutation checks expose tests that miss changed behavior, and browser workflows check visible outcomes and application state independently.
 
@@ -13,8 +13,8 @@ The alpha includes seven MCP tools and a standalone review package that needs no
 Try the free demonstration:
 
 ```sh
-git clone https://github.com/hamza-paracha/vouch.git
-cd vouch
+git clone https://github.com/hamza-paracha/proof-jev.git
+cd proof-jev
 npm ci
 npx playwright install chromium
 npm run verify:demo
@@ -26,8 +26,8 @@ This is an alpha for trusted repositories and controlled local HTTP(S) applicati
 
 ## Short announcement
 
-vouch-jev is open source: Jev-powered code review for coding agents, backed by mutation checks, browser assertions and replayable evidence.
+Proof-Jev is an open-source project using Jev: Jev-powered code review for coding agents, backed by mutation checks, browser assertions and replayable evidence.
 
 The demo catches a form that says “Saved” without saving, then verifies the working version. No API key required. MCP + CLI. Local Codex and Claude Code plugins. MIT licensed.
 
-Try it: https://github.com/hamza-paracha/vouch
+Try it: https://github.com/hamza-paracha/proof-jev

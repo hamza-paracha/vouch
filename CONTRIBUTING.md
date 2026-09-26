@@ -1,4 +1,4 @@
-# Contributing to vouch-jev
+# Contributing to proof-jev
 
 Reproducible bugs, clear documentation, and focused fixes are welcome. This is an alpha; help us make its supported local workflows dependable before widening its scope.
 

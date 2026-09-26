@@ -2,7 +2,7 @@ import { generate } from "selfsigned";
 
 /** Ephemeral interception certificate, never written to disk or installed in an OS trust store. */
 export async function interceptionCertificate() {
-  const pems = await generate([{ name: "commonName", value: "vouch-jev local verification" }], {
+  const pems = await generate([{ name: "commonName", value: "proof-jev local verification" }], {
     keyType: "ec", curve: "P-256", algorithm: "sha256",
     notBeforeDate: new Date(Date.now() - 60_000), notAfterDate: new Date(Date.now() + 86_400_000),
     extensions: [

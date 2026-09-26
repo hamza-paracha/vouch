@@ -11,15 +11,15 @@ process.once("SIGINT", () => controller.abort()); process.once("SIGTERM", () => 
 try {
   const args = process.argv.slice(2);
   if (args[0] === "--stdio" && args.length === 1) {
-    const server = new McpServer({ name: "vouch-jev-review", version: VERSION });
+    const server = new McpServer({ name: "proof-jev-review", version: VERSION });
     registerReviewTools(server, { ...reviewOptionsFromEnv(), signal: controller.signal });
     server.server.onclose = () => controller.abort();
     controller.signal.addEventListener("abort", () => { void server.close(); }, { once: true });
     await server.connect(new StdioServerTransport());
   } else if (args[0] === "--help") {
-    process.stdout.write("Usage: vouch-jev-guard --stdio | review|assess-pr|check-file --project <repo> [--base <ref>] [--file <path>]\nCode review only. No browser or project code execution. Models require explicit configuration.\n");
+    process.stdout.write("Usage: proof-jev-guard --stdio | review|assess-pr|check-file --project <repo> [--base <ref>] [--file <path>]\nCode review only. No browser or project code execution. Models require explicit configuration.\n");
   } else {
     const { result, exitCode } = await reviewCLI([...(args[0] && ["review", "assess-pr", "check-file"].includes(args[0]) ? [] : ["review"]), ...args], controller.signal);
     process.stdout.write(JSON.stringify(result, null, 2) + "\n"); process.exitCode = exitCode;
   }
-} catch (error) { process.stderr.write(`vouch-jev-guard: ${error instanceof Error ? error.message : "Startup failed"}\n`); process.exitCode = 2; }
+} catch (error) { process.stderr.write(`proof-jev-guard: ${error instanceof Error ? error.message : "Startup failed"}\n`); process.exitCode = 2; }

@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
-import { getDiff } from "./diff.ts";
+import { getDiff, type DiffHunk } from "./diff.ts";
 import { fileRequest, prRequest, type ReviewRequest } from "./questions.ts";
 import { decodeJudgment, type Judgment, type ReviewAdapter } from "./judge.ts";
 import { reviewChangeSchema, assessPrSchema, checkFileSchema, thresholdsSchema, type ReviewAction, type Thresholds } from "./schema.ts";
@@ -15,6 +15,7 @@ export interface ReviewOptions {
 export interface FileJudgment {
   file: string; status: "reviewed" | "error" | "budget_exhausted" | "cancelled"; judgment?: Judgment;
   truncated: boolean; durationMs: number; error?: string;
+  evidence?: { scope: "file"; diffHash: string; previousFile?: string; hunks: DiffHunk[] };
 }
 export interface GuardReport {
   schemaVersion: 1; runId: string; action: ReviewAction; status: "clean" | "needs_attention" | "high_risk" | "error" | "budget_exhausted" | "cancelled";
@@ -27,9 +28,14 @@ export interface GuardReport {
 function markdown(report: GuardReport): string {
   const files = [...report.files, ...(report.pr ? [report.pr] : [])];
   const safe = (s: string) => s.replace(/[\r\n|`]/g, " ");
-  return `# vouch-jev structured code review\n\n**${report.status}** — ${report.summary}\n\nBase: ${report.base}\n\n` +
-    `| File / scope | Result | Flags | Warnings | Uncertain |\n| --- | --- | --- | --- | --- |\n` +
-    files.map(f => `| ${safe(f.file)} | ${f.status}${f.truncated ? " (partial context)" : ""} | ${f.judgment?.flags.join(", ") ?? ""} | ${f.judgment?.warnings.join(", ") ?? ""} | ${f.judgment?.uncertain.join(", ") ?? ""} |`).join("\n") +
+  const locations = (f: FileJudgment) => {
+    if (!f.evidence) return "—";
+    const ranges = f.evidence.hunks.flatMap(h => [...h.added.map(r => `+${r.start}${r.end === r.start ? "" : `–${r.end}`}`), ...h.deleted.map(r => `−${r.start}${r.end === r.start ? "" : `–${r.end}`} (base)`)]);
+    return ranges.slice(0, 6).join(", ") + (ranges.length > 6 ? `; ${ranges.length - 6} more in JSON` : ranges.length ? "" : "metadata only");
+  };
+  return `# proof-jev structured code review\n\n**${report.status}** — ${report.summary}\n\nBase: ${report.base}\n\n` +
+    `| File / scope | Changed lines | Result | Flags | Warnings | Uncertain |\n| --- | --- | --- | --- | --- | --- |\n` +
+    files.map(f => `| ${safe(f.file)} | ${locations(f)} | ${f.status}${f.truncated ? " (partial context)" : ""} | ${f.judgment?.flags.join(", ") ?? ""} | ${f.judgment?.warnings.join(", ") ?? ""} | ${f.judgment?.uncertain.join(", ") ?? ""} |`).join("\n") +
     `\n\n${report.limitations.map(s => "- " + s).join("\n")}\n\nFull probabilities and usage are in report.json. This review does not execute tests or authorize a merge.\n`;
 }
 export async function reviewCode(action: ReviewAction, raw: unknown, options: ReviewOptions): Promise<GuardReport> {
@@ -48,7 +54,7 @@ export async function reviewCode(action: ReviewAction, raw: unknown, options: Re
   const report: GuardReport = { schemaVersion: 1, runId, action, status: "error", summary: "Review did not complete", base: diff.base, snapshotHash: diff.snapshotHash, durationMs: 0,
     files: [], totals: { filesChanged: diff.totalFiles, filesReviewed: 0, highConfidenceFlags: 0, mediumConfidenceWarnings: 0, lowConfidenceUncertain: 0 },
     incomplete: diff.truncated, skipped: diff.skipped,
-    limitations: ["Model judgments are advisory; no code, tests or browser workflows were executed.", "Confidence bands are not calibrated on this repository and do not authorize automatic merging.", "Missing callers, tests or truncated context can hide defects. Secret scrubbing is not a comprehensive scanner.", "Latency is measured per run, not guaranteed; token cost is an estimate, not a provider invoice."],
+    limitations: ["Model judgments are advisory; no code, tests or browser workflows were executed.", "Confidence bands are not calibrated on this repository and do not authorize automatic merging.", "Changed-line evidence comes from Git. Model judgments cover a whole file and are not diagnoses of individual lines.", "Missing callers, tests or truncated context can hide defects. Secret scrubbing is not a comprehensive scanner.", "Latency is measured per run, not guaranteed; token cost is an estimate, not a provider invoice."],
     cost: { totalCalls: 0, totalInputTokens: 0, totalOutputTokens: 0, totalEstimatedUsd: 0, reservedEstimatedUsd: 0, inputPricePerMillion: price, providerReportedCostUsd: null },
     artifacts: { report: join(directory, "report.json"), markdown: join(directory, "report.md") } };
   const budget = options.budget ?? new ModelBudget();
@@ -75,10 +81,10 @@ export async function reviewCode(action: ReviewAction, raw: unknown, options: Re
     }
     item.durationMs = Date.now() - start; return item;
   };
-  const jobs = diff.chunks.map(chunk => ({ file: chunk.file, request: fileRequest(chunk) }));
+  const jobs = diff.chunks.map(chunk => ({ file: chunk.file, request: fileRequest(chunk), evidence: { scope: "file" as const, diffHash: chunk.hash, ...(chunk.previousFile ? { previousFile: chunk.previousFile } : {}), hunks: chunk.hunks } }));
   let next = 0; const results: FileJudgment[] = new Array(jobs.length);
   await Promise.all(Array.from({ length: Math.min(concurrency, jobs.length) }, async () => {
-    while (next < jobs.length) { const index = next++; const job = jobs[index]!; results[index] = await judge(job.file, job.request); }
+    while (next < jobs.length) { const index = next++; const job = jobs[index]!; results[index] = { ...await judge(job.file, job.request), evidence: job.evidence }; }
   }));
   report.files = results;
   if (action === "assess_pr" && diff.chunks.length) report.pr = await judge("<pull request>", prRequest(diff, "title" in input ? input.title : undefined, "description" in input ? input.description : undefined));

@@ -1,6 +1,6 @@
 # Adaptive workflow verification
 
-The new `vouch-jev` CLI and `verify_workflow` MCP tool run explicit browser workflows and return evidence to a coding agent. It ships as a CLI, a local MCP server, and a native Codex/Claude Code plugin bundle. Source and alpha releases are available on GitHub; there is no npm registry publication. The upstream explorer and runner remain available.
+The new `proof-jev` CLI and `verify_workflow` MCP tool run explicit browser workflows and return evidence to a coding agent. It ships as a CLI, a local MCP server, and a native Codex/Claude Code plugin bundle. Source and alpha releases are available on GitHub; there is no npm registry publication. The upstream explorer and runner remain available.
 
 Routing happens **inside this tool**. It does not change Claude Code's or Codex's coding model. Exact control matches and assertions use deterministic code; ambiguous `choose` steps can use Jev when the server operator enables a bounded budget. Uncertain Jev decisions either abstain or escalate once to an explicitly enabled OpenRouter model, within the same budget. Provider failures are not retried or silently escalated.
 
@@ -37,16 +37,16 @@ From this checkout, install dependencies and Chromium first. Then use the absolu
 Codex:
 
 ```sh
-codex mcp add vouch-jev -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
+codex mcp add proof-jev -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 ```
 
 Claude Code (run from the application project):
 
 ```sh
-claude mcp add --transport stdio vouch-jev -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
+claude mcp add --transport stdio proof-jev -- node /absolute/path/to/vouch/bin/vouch.mjs --stdio
 ```
 
-Alternatively, `npm link` in this checkout exposes `vouch-jev` as a local executable. The package has no npm registry publication; use this checkout or the release tarball. `npm run --silent verify:mcp` is also available, but a direct executable avoids npm startup output on the protocol stream.
+Alternatively, `npm link` in this checkout exposes `proof-jev` as a local executable. The package has no npm registry publication; use this checkout or the release tarball. `npm run --silent verify:mcp` is also available, but a direct executable avoids npm startup output on the protocol stream.
 
 Both clients document stdio MCP registration: [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) and [Claude Code local MCP servers](https://code.claude.com/docs/en/mcp#option-3-add-a-local-stdio-server). The implementation uses the [MCP TypeScript SDK](https://ts.sdk.modelcontextprotocol.io/server). We test a real SDK client/server handshake, listing, tool execution and cancellation over stdio; Native Codex installation and Claude Code plugin/MCP loading have also been checked manually; see [validation evidence](validation.md).
 
@@ -80,13 +80,13 @@ Supported steps: `goto`, `click`, `fill`, `choose`, `assertText`, `assertJson`, 
 
 ## HTTPS, sessions and multi-page assertions
 
-HTTPS validates the upstream certificate by default. For a local development CA, set `VOUCH_TLS_CA_FILE` to its PEM file before starting vouch-jev. For an explicitly disposable self-signed server, set `allowInsecureTLS: true` in the workflow or inspection arguments. This exception applies to the exact local target. The ephemeral proxy certificate is trusted only by its dedicated browser context; no OS trust settings change.
+HTTPS validates the upstream certificate by default. For a local development CA, set `VOUCH_TLS_CA_FILE` to its PEM file before starting proof-jev. For an explicitly disposable self-signed server, set `allowInsecureTLS: true` in the workflow or inspection arguments. This exception applies to the exact local target. The ephemeral proxy certificate is trusted only by its dedicated browser context; no OS trust settings change.
 
 To reuse a disposable login, export Playwright storage state and import it through the CLI:
 
 ```sh
 export VOUCH_SESSION_DIR=/absolute/private/vouch-sessions
-vouch-jev --import-session demo /absolute/path/to/storage-state.json --origin https://127.0.0.1:3443
+proof-jev --import-session demo /absolute/path/to/storage-state.json --origin https://127.0.0.1:3443
 ```
 
 Use `"session": "demo"` in `inspect_page` or `verify_workflow`. Import keeps matching host cookies and exact-origin localStorage, stores an owner-only named profile, and refuses to overwrite it. Profiles are bound to protocol, host and port. MCP callers can select a name, never a filesystem path. Cookie/localStorage values are redacted from reports and decision prompts. Redacted workflow inputs may need to be restored from disposable test data before replay; imported credentials are never embedded in replay files. This does not capture sessionStorage or IndexedDB, perform remote login, or reset server state.
@@ -162,14 +162,14 @@ Tests cover deterministic and adaptive routing, reservation accounting, disabled
 
 ```sh
 npm run plugin:build
-node out/plugin/vouch-jev/bin/vouch.mjs --doctor
-claude --plugin-dir "$PWD/out/plugin/vouch-jev" plugin details vouch-jev
-claude --plugin-dir "$PWD/out/plugin/vouch-jev" mcp get plugin:vouch-jev:vouch-jev
+node out/plugin/proof-jev/bin/vouch.mjs --doctor
+claude --plugin-dir "$PWD/out/plugin/proof-jev" plugin details proof-jev
+claude --plugin-dir "$PWD/out/plugin/proof-jev" mcp get plugin:proof-jev:proof-jev
 ```
 
 The build copies only runtime source, manifests, the workflow skill, docs and the locked dependency graph, then installs production dependencies. The result is a self-contained **local, current-platform** bundle. On another OS/architecture, rebuild it there and install that platform's Playwright Chromium. Never copy `.env`, reports or authentication files into a plugin archive.
 
-For Codex, register the generated directory with a local/personal marketplace, then use `codex plugin add vouch-jev@<marketplace>`. Start a new Codex task after an install/update to load its tools and skill. See [official plugin packaging](https://developers.openai.com/plugins/build/plugins) and [Claude Code plugin reference](https://code.claude.com/docs/en/plugins-reference).
+For Codex, register the generated directory with a local/personal marketplace, then use `codex plugin add proof-jev@<marketplace>`. Start a new Codex task after an install/update to load its tools and skill. See [official plugin packaging](https://developers.openai.com/plugins/build/plugins) and [Claude Code plugin reference](https://code.claude.com/docs/en/plugins-reference).
 
 `npm run verify:install` creates a tarball, checks it excludes credentials and development artifacts, installs it in a fresh temporary project, runs readiness checks and verifies a workflow over MCP. It does not publish anything or spend on models. `npm run verify:example` runs the disk-backed profile example against a fresh data file and saves evidence in `out/acceptance/current/`.
 

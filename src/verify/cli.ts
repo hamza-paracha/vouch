@@ -36,7 +36,7 @@ try {
     process.stdout.write(JSON.stringify(result, null, 2) + "\n");
     process.exitCode = result.status === "inspected" ? 0 : 1;
   } else if (args.length !== 1 || args[0] === "--help") {
-    process.stdout.write("Usage: vouch-jev --stdio | --doctor | --inspect <url> | <workflow.json>\n       vouch-jev analyze|verify-change [--project <repo>] [--base <commit>] [--allow-exec]\n       vouch-jev --import-session <name> <state.json> --origin <url>\n       vouch-jev review|assess-pr|check-file --project <repo> [--base <ref>] [--file <path>]\nDefault: rules only, no paid calls. See docs/verification.md.\n");
+    process.stdout.write("Usage: proof-jev --stdio | --doctor | --inspect <url> | <workflow.json>\n       proof-jev analyze|verify-change [--project <repo>] [--base <commit>] [--allow-exec]\n       proof-jev --import-session <name> <state.json> --origin <url>\n       proof-jev review|assess-pr|check-file --project <repo> [--base <ref>] [--file <path>]\nDefault: rules only, no paid calls. See docs/verification.md.\n");
     process.exitCode = args[0] === "--help" ? 0 : 2;
   } else {
     const budget = budgetFromEnv(process.env);
@@ -60,6 +60,6 @@ try {
     }
   }
 } catch (error) {
-  process.stderr.write(`vouch-jev: ${error instanceof Error ? error.message : "startup failed"}\n`);
+  process.stderr.write(`proof-jev: ${error instanceof Error ? error.message : "startup failed"}\n`);
   process.exitCode = 2;
 }

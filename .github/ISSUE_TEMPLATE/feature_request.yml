@@ -1,5 +1,5 @@
 name: Feature request
-description: An idea for vouch-jev
+description: An idea for proof-jev
 labels: [enhancement]
 body:
   - type: textarea

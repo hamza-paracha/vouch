@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "mode": "live",
+  "suiteHash": "3860e678a9b0bbafebc6216e31f71b7ae93506164845eefc7b96a3feb3ed308d",
+  "durationMs": 1266,
+  "thresholds": {
+    "high": 0.9,
+    "medium": 0.7
+  },
+  "complete": true,
+  "observations": [
+    {
+      "caseId": "public-export-regression",
+      "question": "breaking_change",
+      "expected": true,
+      "probabilityYes": 0.87,
+      "correct": true,
+      "decision": "yes",
+      "reason": "Removing greet breaks the explicitly documented named import."
+    },
+    {
+      "caseId": "public-export-control",
+      "question": "breaking_change",
+      "expected": false,
+      "probabilityYes": 0.17,
+      "correct": true,
+      "decision": "no",
+      "reason": "Keeping greet as an alias preserves the documented API and output."
+    },
+    {
+      "caseId": "input-validation-regression",
+      "question": "needs_validation",
+      "expected": true,
+      "probabilityYes": 0.94,
+      "correct": true,
+      "decision": "yes",
+      "reason": "The external quantity reaches the database with its validation removed."
+    },
+    {
+      "caseId": "input-validation-control",
+      "question": "needs_validation",
+      "expected": false,
+      "probabilityYes": 0.16,
+      "correct": true,
+      "decision": "no",
+      "reason": "The same integer and lower-bound checks remain before the database write."
+    },
+    {
+      "caseId": "parse-fallback-regression",
+      "question": "needs_error_handling",
+      "expected": true,
+      "probabilityYes": 0.85,
+      "correct": true,
+      "decision": "yes",
+      "reason": "JSON.parse can throw and the explicitly required fallback was removed."
+    },
+    {
+      "caseId": "parse-fallback-control",
+      "question": "needs_error_handling",
+      "expected": false,
+      "probabilityYes": 0.14,
+      "correct": true,
+      "decision": "no",
+      "reason": "Malformed JSON is still caught and returns the required empty object."
+    },
+    {
+      "caseId": "return-contract-regression",
+      "question": "breaking_change",
+      "expected": true,
+      "probabilityYes": 0.92,
+      "correct": true,
+      "decision": "yes",
+      "reason": "Returning a string removes the documented object fields."
+    },
+    {
+      "caseId": "return-contract-control",
+      "question": "breaking_change",
+      "expected": false,
+      "probabilityYes": 0.09,
+      "correct": true,
+      "decision": "no",
+      "reason": "The refactor preserves both documented fields and their values."
+    }
+  ],
+  "metrics": {
+    "expectedLabels": 8,
+    "evaluatedLabels": 8,
+    "coverage": 1,
+    "accuracyAtHalf": 1,
+    "actionable": {
+      "truePositive": 4,
+      "falsePositive": 0,
+      "trueNegative": 4,
+      "falseNegative": 0,
+      "precision": 1,
+      "recall": 1,
+      "falsePositiveRate": 0
+    },
+    "uncertain": 0,
+    "brierScore": 0.016450000000000003,
+    "confidenceBins": [
+      {
+        "lower": 0.5,
+        "upper": 0.7,
+        "count": 0,
+        "averageConfidence": null,
+        "accuracy": null
+      },
+      {
+        "lower": 0.7,
+        "upper": 0.9,
+        "count": 5,
+        "averageConfidence": 0.85,
+        "accuracy": 1
+      },
+      {
+        "lower": 0.9,
+        "upper": 1,
+        "count": 3,
+        "averageConfidence": 0.9233333333333333,
+        "accuracy": 1
+      }
+    ]
+  },
+  "usage": {
+    "calls": 8,
+    "reservedEstimatedUsd": 0.011999999999999999,
+    "inputTokens": 8058,
+    "outputTokens": 1479
+  },
+  "limitations": [
+    "A small public synthetic suite measures these cases only; it does not establish repository-wide accuracy or calibration.",
+    "Actionable positives require the configured medium confidence threshold. Uncertain positives count as missed detections, not successful reviews.",
+    "Missing and failed cases reduce coverage; metrics describe observed labels only. Read coverage before comparing scores.",
+    "Replay scores recorded answers without model calls. Dry runs validate fixtures and report no quality scores."
+  ],
+  "recordedAt": "2026-09-26T15:34:46.973922+00:00",
+  "model": "jev-1.13.0",
+  "providerReportedCostUsd": null
+}

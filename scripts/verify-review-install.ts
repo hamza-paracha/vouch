@@ -15,9 +15,9 @@ try {
   assert.ok(!packed.files.some((f: { path: string }) => /(?:^|\/)(?:\.env|auth|out|node_modules)(?:\/|$)/.test(f.path)));
   const consumer = join(dir, "consumer"); await mkdir(consumer);
   execFileSync("npm", ["install", "--prefix", consumer, "--ignore-scripts", "--no-audit", "--no-fund", join(dir, packed.filename)], { stdio: "pipe" });
-  const pkg = join(consumer, "node_modules/vouch-jev-guard"); const binary = join(pkg, "bin/guard.mjs");
-  for (const command of ["vouch-jev-guard", "vouch-guard"]) {
-    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: vouch-jev-guard /);
+  const pkg = join(consumer, "node_modules/proof-jev-guard"); const binary = join(pkg, "bin/guard.mjs");
+  for (const command of ["proof-jev-guard", "vouch-jev-guard", "vouch-guard"]) {
+    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: proof-jev-guard /);
   }
   await assert.rejects(access(join(consumer, "node_modules/playwright"))); await assert.rejects(access(join(consumer, "node_modules/typescript-ast")));
   const dependencies = JSON.parse(await readFile(join(pkg, "package.json"), "utf8")).dependencies;

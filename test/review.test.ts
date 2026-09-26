@@ -8,7 +8,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { changeFixture } from './helpers/change-fixture.ts';
-import { getDiff } from '../src/review/diff.ts';
+import { getDiff, parseChunk } from '../src/review/diff.ts';
 import { fileRequest, fileQuestions, prQuestions, MAX_STATE_BYTES, type ReviewRequest } from '../src/review/questions.ts';
 import { decodeJudgment, type ReviewAdapter } from '../src/review/judge.ts';
 import { reviewCode } from '../src/review/review.ts';
@@ -152,5 +152,48 @@ it('file count limits and per-review budgets make omitted evidence visible', asy
     const diff = await getDiff(f.root,'HEAD'); assert.equal(diff.chunks.length,50);assert.equal(diff.skipped.length,3);assert.equal(diff.truncated,true);
     const report = await reviewCode('review_change',{base:'HEAD'},{projectRoot:f.root,outputDir:join(f.root,'out'),adapter:cleanAdapter,budget:budget(),maxCallsPerRun:2});
     assert.equal(report.status,'budget_exhausted');assert.equal(report.cost.totalCalls,2);assert.equal(report.totals.filesReviewed,2);assert.equal(report.incomplete,true);
+  } finally { await f.close(); }
+});
+
+
+it('diff evidence retains exact old/new coordinates across replacements, deletions and insertions', () => {
+  const chunk = parseChunk('src/code.js','modified','--- a/src/code.js\n+++ b/src/code.js\n@@ -10,3 +10,4 @@ function a()\n keep\n-old\n+new\n+extra\n tail\n@@ -30 +31,0 @@ function b()\n-removed\n@@ -40,0 +41 @@\n+fresh\n\\ No newline at end of file\n');
+  assert.equal(chunk.linesChanged,5);
+  const crlf = parseChunk('src/windows.js','modified','@@ -2 +2 @@ function a()\r\n-old\r\n+new\r\n');
+  assert.deepEqual(crlf.hunks[0]!.added,[{start:2,end:2}]); assert.equal(crlf.functions[0],'function a()');
+  assert.deepEqual(chunk.hunks,[
+    {oldStart:10,oldLines:3,newStart:10,newLines:4,added:[{start:11,end:12}],deleted:[{start:11,end:11}]},
+    {oldStart:30,oldLines:1,newStart:31,newLines:0,added:[],deleted:[{start:30,end:30}]},
+    {oldStart:40,oldLines:0,newStart:41,newLines:1,added:[{start:41,end:41}],deleted:[]},
+  ]);
+  assert.throws(()=>parseChunk('src/code.js','modified','@@ -1,2 +1,2 @@\n-only one\n+only one\n'),/hunk line counts/);
+});
+
+it('new-file line counts match Git semantics for empty files, terminal newlines and unusual paths', async () => {
+  const f=await changeFixture();
+  try {
+    const inputs=[['src/empty.js','',0],['src/one.js','x',1],['src/terminated.js','x\n',1],['src/blank.js','x\n\n',2],['src/odd\n@@ -0,0 +1 @@.js','x\n',1]] as const;
+    for(const [file,source] of inputs)await writeFile(join(f.root,file),source);
+    await f.git('config','color.ui','always'); await f.git('config','diff.suppressBlankEmpty','true');
+    const diff=await getDiff(f.root,'HEAD');
+    for(const [file,,count] of inputs) {
+      const chunk=diff.chunks.find(c=>c.file===file)!;assert.ok(chunk);assert.equal(chunk.linesChanged,count);
+      assert.deepEqual(chunk.hunks.flatMap(h=>h.added),count?[{start:1,end:count}]:[]);
+    }
+    const tracked=diff.chunks.find(c=>c.file==='src/pricing.mjs')!;
+    assert.deepEqual(tracked.hunks[0]!.added,[{start:3,end:3}]);assert.ok(tracked.additions.includes('>= 50'));
+  } finally { await f.close(); }
+});
+
+it('review reports expose Git locations as file evidence without claiming line-level model diagnoses', async () => {
+  const f=await changeFixture();
+  try {
+    const report=await reviewCode('check_file',{file:'src/pricing.mjs'},{projectRoot:f.root,outputDir:join(f.root,'out'),adapter:cleanAdapter,budget:budget()});
+    const evidence=report.files[0]!.evidence!;
+    assert.equal(evidence.scope,'file');assert.match(evidence.diffHash,/^[a-f0-9]{64}$/);
+    assert.deepEqual(evidence.hunks[0]!.added,[{start:3,end:3}]);assert.deepEqual(evidence.hunks[0]!.deleted,[{start:3,end:3}]);
+    const md=await readFile(report.artifacts.markdown,'utf8');assert.ok(md.includes('+3'));assert.ok(md.includes('−3 (base)'));assert.ok(md.includes('not diagnoses of individual lines'));
+    assert.deepEqual(JSON.parse(await readFile(report.artifacts.report,'utf8')).files[0].evidence,evidence);
+    assert.ok(!JSON.stringify(evidence).includes('total >= 50'));
   } finally { await f.close(); }
 });
