@@ -1,6 +1,6 @@
 # Code-aware change verification
 
-vouch-jev can inspect an agent's diff and challenge the tests around it. This complements the browser verifier: the code pipeline identifies source changes and weak assertions; the browser pipeline checks observable application behavior.
+proof-jev can inspect an agent's diff and challenge the tests around it. This complements the browser verifier: the code pipeline identifies source changes and weak assertions; the browser pipeline checks observable application behavior.
 
 It is an execution pipeline, with no model API calls:
 
@@ -17,7 +17,7 @@ It is an execution pipeline, with no model API calls:
 npm run verify:change-demo
 ```
 
-The demo creates a temporary Git repository. A shipping change makes the threshold inclusive (`>= 50`). The initial tests cover ordinary orders but omit the exact threshold and negative input. They pass normally, even with deliberate bugs. vouch-jev reports those surviving mutations.
+The demo creates a temporary Git repository. A shipping change makes the threshold inclusive (`>= 50`). The initial tests cover ordinary orders but omit the exact threshold and negative input. They pass normally, even with deliberate bugs. proof-jev reports those surviving mutations.
 
 The demo then adds explicit assertions for the fixture's known requirements: total 50, total zero, and negative totals. The same mutation checks now fail as expected. The product source is unchanged; only the example's tests are strengthened. This is a controlled demonstration, not autonomous discovery of a specification or an accuracy benchmark.
 

@@ -19,13 +19,15 @@ try {
   const consumer = join(directory, "consumer");
   await mkdir(consumer);
   execFileSync("npm", ["install", "--prefix", consumer, "--ignore-scripts", "--no-audit", "--no-fund", join(directory, packed.filename)], { stdio: "pipe" });
-  const binary = join(consumer, "node_modules/vouch-jev/bin/vouch.mjs");
-  for (const command of ["vouch-jev", "vouch"]) {
-    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: vouch-jev /);
+  const binary = join(consumer, "node_modules/proof-jev/bin/vouch.mjs");
+  for (const command of ["proof-jev", "vouch-jev", "vouch"]) {
+    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: proof-jev /);
   }
-  for (const command of ["vouch-jev-guard", "vouch-guard"]) {
-    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: vouch-jev-guard /);
+  for (const command of ["proof-jev-guard", "vouch-jev-guard", "vouch-guard"]) {
+    assert.match(execFileSync(join(consumer, "node_modules/.bin", command), ["--help"], { cwd: consumer, encoding: "utf8" }), /Usage: proof-jev-guard /);
   }
+  const evaluation = JSON.parse(execFileSync(process.execPath, ["--import", "tsx", join(consumer, "node_modules/proof-jev/scripts/evaluate-review.ts")], { cwd: consumer, encoding: "utf8" }));
+  assert.equal(evaluation.mode, "dry_run"); assert.equal(evaluation.usage.calls, 0); assert.equal(evaluation.metrics.expectedLabels, 8);
   const environment = { PATH: process.env.PATH ?? "", HOME: process.env.HOME ?? "", VERIFY_MODEL_MAX_CALLS: "0", VERIFY_OUTPUT_DIR: join(directory, "reports"), VOUCH_PROJECT_ROOT: changes.root, VOUCH_ALLOW_EXECUTION: "1" };
   const readiness = JSON.parse(execFileSync(process.execPath, [binary, "--doctor"], { cwd: consumer, env: environment, encoding: "utf8" }));
   assert.equal(readiness.status, "ready");

@@ -1,5 +1,9 @@
 # Validation evidence
 
+## Proof-Jev review-quality baseline — September 26, 2026
+
+The renamed project passes 151 automated tests and the TypeScript check. Fresh full-package and standalone installs pass, including legacy CLI aliases and the packaged evaluation dry run. A bounded eight-call Jev run classified all eight labelled synthetic cases correctly: four regressions and four clean controls. These limited results and the real responses can be replayed without provider calls; see [evaluation methodology](review-evaluation.md) and [baseline data](review-quality-baseline.json). This does not establish accuracy or calibration on real repositories.
+
 ## Version 0.4 candidate
 
 The structured review layer adds three tools alongside browser and mutation verification. **140 tests pass**, including simulated SDK responses over the real MCP transport, bounded concurrency, persistent budgets, cancellation, malformed responses, secret scrubbing and partial-context reporting. The standalone package installs outside the checkout and exposes its three tools without Playwright or the AST parser.
@@ -72,4 +76,4 @@ The Jev threshold remains uncalibrated on this workload. A representative held-o
 
 The launch candidate was rechecked on Node.js 22.22.0 with models disabled: all 114 tests, typechecking, the paired demo, fresh tarball installation and MCP execution, the disk-backed example, plugin build and readiness check passed. The JSON workflow printed in the README was also extracted and run unchanged against the example app; it passed and the independent file read returned `Ada Lovelace`.
 
-The example acceptance script now asserts that any successful MCP result also matches the independently read disk value. Public CI repeats typechecking, the full suite, both demos, package installation and plugin readiness on Linux with Node.js 22 and 24. The repository’s [Actions page](https://github.com/hamza-paracha/vouch/actions/workflows/ci.yml) is the source for current CI status.
+The example acceptance script now asserts that any successful MCP result also matches the independently read disk value. Public CI repeats typechecking, the full suite, both demos, package installation and plugin readiness on Linux with Node.js 22 and 24. The repository’s [Actions page](https://github.com/hamza-paracha/proof-jev/actions/workflows/ci.yml) is the source for current CI status.

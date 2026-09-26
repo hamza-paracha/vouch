@@ -1,0 +1,509 @@
+{
+  "suiteHash": "3860e678a9b0bbafebc6216e31f71b7ae93506164845eefc7b96a3feb3ed308d",
+  "responses": {
+    "public-export-regression": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.87
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 0.55,
+          "confidence": 0.51,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.47,
+            "1": 0.52,
+            "2": 0.01,
+            "3": 0
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "refactor",
+          "confidence": 0.94,
+          "probabilities": {
+            "feature": 0.01,
+            "bug_fix": 0.04,
+            "refactor": 0.95,
+            "security": 0,
+            "docs": 0,
+            "config": 0
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.76
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.27
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.43
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.89
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.31
+        }
+      },
+      "usage": {
+        "input_tokens": 984,
+        "output_tokens": 185
+      }
+    },
+    "public-export-control": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.17
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 0.08,
+          "confidence": 0.92,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.92,
+            "1": 0.08,
+            "2": 0,
+            "3": 0
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "refactor",
+          "confidence": 0.94,
+          "probabilities": {
+            "security": 0,
+            "refactor": 0.95,
+            "config": 0,
+            "feature": 0.04,
+            "bug_fix": 0.01,
+            "docs": 0
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.64
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.18
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.39
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.53
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.62
+        }
+      },
+      "usage": {
+        "input_tokens": 990,
+        "output_tokens": 185
+      }
+    },
+    "input-validation-regression": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.37
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 2.26,
+          "confidence": 0.6,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.01,
+            "1": 0.06,
+            "2": 0.6,
+            "3": 0.33
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "security",
+          "confidence": 0.75,
+          "probabilities": {
+            "security": 0.79,
+            "config": 0,
+            "refactor": 0.03,
+            "docs": 0,
+            "bug_fix": 0.17,
+            "feature": 0.01
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.93
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.78
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.94
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.86
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.06
+        }
+      },
+      "usage": {
+        "input_tokens": 1028,
+        "output_tokens": 184
+      }
+    },
+    "input-validation-control": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.12
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 0.11,
+          "confidence": 0.89,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.93,
+            "1": 0.03,
+            "2": 0.04,
+            "3": 0
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "refactor",
+          "confidence": 0.89,
+          "probabilities": {
+            "bug_fix": 0.02,
+            "docs": 0,
+            "feature": 0,
+            "security": 0.06,
+            "config": 0,
+            "refactor": 0.92
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.56
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.25
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.16
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.32
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.6
+        }
+      },
+      "usage": {
+        "input_tokens": 1057,
+        "output_tokens": 185
+      }
+    },
+    "parse-fallback-regression": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.84
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 1.69,
+          "confidence": 0.26,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.03,
+            "1": 0.42,
+            "2": 0.39,
+            "3": 0.16
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "bug_fix",
+          "confidence": 0.58,
+          "probabilities": {
+            "docs": 0,
+            "config": 0,
+            "security": 0.03,
+            "refactor": 0.31,
+            "bug_fix": 0.66,
+            "feature": 0
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.92
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.85
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.8
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.89
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.09
+        }
+      },
+      "usage": {
+        "input_tokens": 997,
+        "output_tokens": 185
+      }
+    },
+    "parse-fallback-control": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.13
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 0.06,
+          "confidence": 0.94,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.96,
+            "1": 0.03,
+            "2": 0.01,
+            "3": 0
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "refactor",
+          "confidence": 0.82,
+          "probabilities": {
+            "bug_fix": 0.12,
+            "security": 0.02,
+            "docs": 0,
+            "feature": 0.01,
+            "config": 0,
+            "refactor": 0.85
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.52
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.14
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.55
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.3
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.59
+        }
+      },
+      "usage": {
+        "input_tokens": 1011,
+        "output_tokens": 185
+      }
+    },
+    "return-contract-regression": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.92
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 1.36,
+          "confidence": 0.57,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.04,
+            "1": 0.6,
+            "2": 0.32,
+            "3": 0.04
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "bug_fix",
+          "confidence": 0.69,
+          "probabilities": {
+            "security": 0.01,
+            "bug_fix": 0.75,
+            "refactor": 0.23,
+            "feature": 0.01,
+            "config": 0,
+            "docs": 0
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.93
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.59
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.5
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.93
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.17
+        }
+      },
+      "usage": {
+        "input_tokens": 992,
+        "output_tokens": 185
+      }
+    },
+    "return-contract-control": {
+      "model": "jev-1.13.0",
+      "answers": {
+        "breaking_change": {
+          "type": "noul",
+          "noul": 0.09
+        },
+        "risk_level": {
+          "type": "score",
+          "score": 0.02,
+          "confidence": 0.98,
+          "legend": {
+            "0": "Low: cosmetic or narrowly scoped",
+            "1": "Medium: moderate behavioral change",
+            "2": "High: core logic, authorization or data handling",
+            "3": "Critical: plausible data loss, security breach or full outage"
+          },
+          "probabilities": {
+            "0": 0.99,
+            "1": 0.01,
+            "2": 0,
+            "3": 0
+          }
+        },
+        "change_type": {
+          "type": "choice",
+          "choice": "refactor",
+          "confidence": 0.93,
+          "probabilities": {
+            "refactor": 0.95,
+            "feature": 0.02,
+            "security": 0,
+            "config": 0,
+            "bug_fix": 0.03,
+            "docs": 0
+          }
+        },
+        "needs_tests": {
+          "type": "noul",
+          "noul": 0.4
+        },
+        "needs_error_handling": {
+          "type": "noul",
+          "noul": 0.13
+        },
+        "needs_validation": {
+          "type": "noul",
+          "noul": 0.37
+        },
+        "side_effects": {
+          "type": "noul",
+          "noul": 0.27
+        },
+        "ready_to_merge": {
+          "type": "noul",
+          "noul": 0.61
+        }
+      },
+      "usage": {
+        "input_tokens": 999,
+        "output_tokens": 185
+      }
+    }
+  }
+}

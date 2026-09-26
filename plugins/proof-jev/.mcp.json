@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "vouch-jev": {
+    "proof-jev": {
       "command": "node",
       "args": [
         "${CLAUDE_PLUGIN_ROOT}/bin/vouch.mjs",

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Proof-Jev
+
+- Renamed the project, package, MCP server, and plugin to `proof-jev`; retained existing CLI aliases and configuration.
+- Removed the unused decorative hero image and made Jev’s role explicit in the text-only presentation.
+- Added a labelled review evaluation suite with live, dry-run, and offline replay modes, coverage, precision/recall, false alarms, uncertainty, and probability-error metrics.
+- Recorded eight real Jev responses against executable regression/control fixtures. This is a small synthetic baseline, not general accuracy evidence.
+
 ## Unreleased — vouch-jev
 
 - Renamed the product, package and plugin to `vouch-jev`, with Jev-powered review leading the documentation.

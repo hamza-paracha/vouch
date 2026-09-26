@@ -1,4 +1,4 @@
-# vouch-jev implementation roadmap
+# proof-jev implementation roadmap
 
 The product has two complementary directions: make browser verification usable for real local apps, and inspect source changes deeply enough to expose weak tests. This tracks shipped implementations and remaining scope, not adoption or correctness claims.
 
@@ -20,12 +20,19 @@ The product has two complementary directions: make browser verification usable f
 - [x] Eight per-file Jev questions and four PR questions using the actual SDK primitive shapes.
 - [x] Advisory confidence bands, validated distributions, explicit uncertainty and no automatic merging.
 - [x] Persistent model budgets, bounded parallelism, no retries, deadlines and local evidence.
-- [x] `review_change`, `assess_pr`, `check_file` via full vouch-jev and standalone Guard CLI/MCP.
+- [x] `review_change`, `assess_pr`, `check_file` via full proof-jev and standalone Guard CLI/MCP.
 - [x] Standalone package without Playwright or AST dependencies; client setup and honest limits documented.
 - [x] Simulated-provider tests plus a bounded real-provider check of all three tools.
 - [x] Ten-file latency measured at 638 ms in one live smoke run; broader performance is not guaranteed.
 
-The combined vouch-jev server retains browser, mutation and structured review capabilities. Its standalone Guard package provides the code-only workflow. Repository-specific confidence calibration remains unproven; reports identify confidence provenance and uncertainty.
+The combined proof-jev server retains browser, mutation and structured review capabilities. Its standalone Guard package provides the code-only workflow. Repository-specific confidence calibration remains unproven; reports identify confidence provenance and uncertainty.
+
+## Review quality
+
+- [x] Eight labelled regression/control cases with executable contract checks.
+- [x] Recorded Jev responses and offline replay with detection, false-alarm, coverage, and probability-error metrics.
+- [ ] Broader independently labelled cases, missing-context examples, and prompt-injection robustness tests.
+- [ ] Evaluation on representative real changes before making accuracy or calibration claims.
 
 ## Next depth improvements
 

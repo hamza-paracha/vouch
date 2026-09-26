@@ -1,0 +1,106 @@
+[
+  {
+    "id": "public-export-regression",
+    "file": "src/greeting.js",
+    "before": "// Public API: callers import greet(name).\nexport function greet(name) { return `Hello ${name}`; }\n",
+    "after": "// Public API: callers import greet(name).\nexport function welcome(name) { return `Hello ${name}`; }\n",
+    "labels": [
+      {
+        "question": "breaking_change",
+        "expected": true,
+        "reason": "Removing greet breaks the explicitly documented named import."
+      }
+    ]
+  },
+  {
+    "id": "public-export-control",
+    "file": "src/greeting.js",
+    "before": "// Public API: callers import greet(name).\nexport function greet(name) { return `Hello ${name}`; }\n",
+    "after": "// Public API: callers import greet(name).\nexport function welcome(name) { return `Hello ${name}`; }\nexport const greet = welcome;\n",
+    "labels": [
+      {
+        "question": "breaking_change",
+        "expected": false,
+        "reason": "Keeping greet as an alias preserves the documented API and output."
+      }
+    ]
+  },
+  {
+    "id": "input-validation-regression",
+    "file": "src/order.js",
+    "before": "// Called with untrusted JSON. Reject invalid quantities before writing.\nexport function order(body, db) {\n  if (!Number.isInteger(body.quantity) || body.quantity < 1) throw new RangeError(\"quantity\");\n  return db.insert({ quantity: body.quantity });\n}\n",
+    "after": "// Called with untrusted JSON. Reject invalid quantities before writing.\nexport function order(body, db) {\n  return db.insert({ quantity: body.quantity });\n}\n",
+    "labels": [
+      {
+        "question": "needs_validation",
+        "expected": true,
+        "reason": "The external quantity reaches the database with its validation removed."
+      }
+    ]
+  },
+  {
+    "id": "input-validation-control",
+    "file": "src/order.js",
+    "before": "// Called with untrusted JSON. Reject invalid quantities before writing.\nexport function order(body, db) {\n  if (!Number.isInteger(body.quantity) || body.quantity < 1) throw new RangeError(\"quantity\");\n  return db.insert({ quantity: body.quantity });\n}\n",
+    "after": "// Called with untrusted JSON. Reject invalid quantities before writing.\nexport function order(body, db) {\n  const quantity = body.quantity;\n  if (!Number.isInteger(quantity) || quantity < 1) throw new RangeError(\"quantity\");\n  return db.insert({ quantity });\n}\n",
+    "labels": [
+      {
+        "question": "needs_validation",
+        "expected": false,
+        "reason": "The same integer and lower-bound checks remain before the database write."
+      }
+    ]
+  },
+  {
+    "id": "parse-fallback-regression",
+    "file": "src/preferences.js",
+    "before": "// Contract: malformed stored JSON returns an empty object; never throw.\nexport function preferences(text) {\n  try { return JSON.parse(text); } catch { return {}; }\n}\n",
+    "after": "// Contract: malformed stored JSON returns an empty object; never throw.\nexport function preferences(text) { return JSON.parse(text); }\n",
+    "labels": [
+      {
+        "question": "needs_error_handling",
+        "expected": true,
+        "reason": "JSON.parse can throw and the explicitly required fallback was removed."
+      }
+    ]
+  },
+  {
+    "id": "parse-fallback-control",
+    "file": "src/preferences.js",
+    "before": "// Contract: malformed stored JSON returns an empty object; never throw.\nexport function preferences(text) {\n  try { return JSON.parse(text); } catch { return {}; }\n}\n",
+    "after": "// Contract: malformed stored JSON returns an empty object; never throw.\nexport function preferences(text) {\n  try { const parsed = JSON.parse(text); return parsed; } catch { return {}; }\n}\n",
+    "labels": [
+      {
+        "question": "needs_error_handling",
+        "expected": false,
+        "reason": "Malformed JSON is still caught and returns the required empty object."
+      }
+    ]
+  },
+  {
+    "id": "return-contract-regression",
+    "file": "src/identity.js",
+    "before": "// Public API: callers read identity(id).id and .active.\nexport function identity(id) { return { id, active: true }; }\n",
+    "after": "// Public API: callers read identity(id).id and .active.\nexport function identity(id) { return String(id); }\n",
+    "labels": [
+      {
+        "question": "breaking_change",
+        "expected": true,
+        "reason": "Returning a string removes the documented object fields."
+      }
+    ]
+  },
+  {
+    "id": "return-contract-control",
+    "file": "src/identity.js",
+    "before": "// Public API: callers read identity(id).id and .active.\nexport function identity(id) { return { id, active: true }; }\n",
+    "after": "// Public API: callers read identity(id).id and .active.\nexport function identity(id) { const active = true; return { id, active }; }\n",
+    "labels": [
+      {
+        "question": "breaking_change",
+        "expected": false,
+        "reason": "The refactor preserves both documented fields and their values."
+      }
+    ]
+  }
+]
