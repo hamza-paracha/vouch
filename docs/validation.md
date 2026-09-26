@@ -2,7 +2,7 @@
 
 ## Proof-Jev review-quality baseline — September 26, 2026
 
-The renamed project passes 151 automated tests and the TypeScript check. Fresh full-package and standalone installs pass, including legacy CLI aliases and the packaged evaluation dry run. A bounded eight-call Jev run classified all eight labelled synthetic cases correctly: four regressions and four clean controls. These limited results and the real responses can be replayed without provider calls; see [evaluation methodology](review-evaluation.md) and [baseline data](review-quality-baseline.json). This does not establish accuracy or calibration on real repositories.
+The renamed project passes 154 automated tests and the TypeScript check. Fresh full-package and standalone installs pass, including legacy CLI aliases and the packaged evaluation dry run. A bounded eight-call Jev run classified all eight labelled synthetic cases correctly: four regressions and four clean controls. These limited results and the real responses can be replayed without provider calls; see [evaluation methodology](review-evaluation.md) and [baseline data](review-quality-baseline.json). This does not establish accuracy or calibration on real repositories.
 
 ## Version 0.4 candidate
 

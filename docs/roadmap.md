@@ -29,6 +29,7 @@ The combined proof-jev server retains browser, mutation and structured review ca
 
 ## Review quality
 
+- [x] Exact old/new hunk line evidence and diff hashes in review reports; corrected new-file line counts and machine-readable Git formatting.
 - [x] Eight labelled regression/control cases with executable contract checks.
 - [x] Recorded Jev responses and offline replay with detection, false-alarm, coverage, and probability-error metrics.
 - [ ] Broader independently labelled cases, missing-context examples, and prompt-injection robustness tests.

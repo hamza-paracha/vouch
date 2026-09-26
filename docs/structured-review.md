@@ -92,6 +92,8 @@ Example verdict shape (illustrative values):
 }
 ```
 
+Each file report includes `evidence` with its diff hash and exact added/deleted line ranges per hunk. Added ranges refer to the working file; deleted ranges refer to the recorded base commit (and `previousFile` for renames). Markdown shows changed lines beside the verdicts. These are file-level review locations, not claims that Jev diagnosed a particular line. They remain available for failed or budget-limited reviews.
+
 Each run retains owner-only `report.json` and `report.md` files. Reports include the base commit, diff fingerprint, file coverage, skipped paths, latency, complete verdicts and distributions, token usage, estimated price and reservations. Provider-reported billing is unknown. Lost or invalid responses leave usage/cost unknown rather than assuming zero.
 
 ## Configuration

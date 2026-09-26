@@ -2,6 +2,8 @@
 
 ## Unreleased — Proof-Jev
 
+- Added exact Git line evidence to review reports and corrected new-file line counts, unusual-path handling, and Git formatting robustness.
+
 - Renamed the project, package, MCP server, and plugin to `proof-jev`; retained existing CLI aliases and configuration.
 - Removed the unused decorative hero image and made Jev’s role explicit in the text-only presentation.
 - Added a labelled review evaluation suite with live, dry-run, and offline replay modes, coverage, precision/recall, false alarms, uncertainty, and probability-error metrics.
